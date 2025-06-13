@@ -2,8 +2,8 @@
 
 namespace ElliottLawson\Converse\Database\Factories;
 
-use ElliottLawson\Converse\Models\MessageChunk;
 use ElliottLawson\Converse\Models\Message;
+use ElliottLawson\Converse\Models\MessageChunk;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MessageChunkFactory extends Factory

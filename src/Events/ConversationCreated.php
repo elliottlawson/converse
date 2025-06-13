@@ -3,7 +3,6 @@
 namespace ElliottLawson\Converse\Events;
 
 use ElliottLawson\Converse\Models\Conversation;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -21,7 +20,7 @@ class ConversationCreated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('user.' . $this->conversation->conversable_id),
+            new PrivateChannel('user.'.$this->conversation->conversable_id),
         ];
     }
 

@@ -10,12 +10,12 @@ class SystemMessage
         public readonly string $content,
         public readonly array $metadata = []
     ) {}
-    
+
     public function getRole(): MessageRole
     {
         return MessageRole::System;
     }
-    
+
     public function toArray(): array
     {
         return [

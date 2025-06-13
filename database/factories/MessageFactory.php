@@ -2,10 +2,10 @@
 
 namespace ElliottLawson\Converse\Database\Factories;
 
-use ElliottLawson\Converse\Models\Message;
-use ElliottLawson\Converse\Models\Conversation;
 use ElliottLawson\Converse\Enums\MessageRole;
 use ElliottLawson\Converse\Enums\MessageStatus;
+use ElliottLawson\Converse\Models\Conversation;
+use ElliottLawson\Converse\Models\Message;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MessageFactory extends Factory
@@ -15,7 +15,7 @@ class MessageFactory extends Factory
     public function definition(): array
     {
         $isComplete = $this->faker->boolean(80);
-        
+
         return [
             'conversation_id' => Conversation::factory(),
             'role' => $this->faker->randomElement(MessageRole::cases()),

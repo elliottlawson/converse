@@ -10,12 +10,12 @@ class ToolResultMessage
         public readonly string $content,
         public readonly array $metadata = []
     ) {}
-    
+
     public function getRole(): MessageRole
     {
         return MessageRole::ToolResult;
     }
-    
+
     public function toArray(): array
     {
         return [
