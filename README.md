@@ -1,5 +1,9 @@
 # Laravel Converse
 
+[![Tests](https://github.com/elliottlawson/converse/actions/workflows/tests.yml/badge.svg)](https://github.com/elliottlawson/converse/actions/workflows/tests.yml)
+[![Latest Stable Version](https://poser.pugx.org/elliottlawson/converse/v/stable)](https://packagist.org/packages/elliottlawson/converse)
+[![License](https://poser.pugx.org/elliottlawson/converse/license)](https://packagist.org/packages/elliottlawson/converse)
+
 A Laravel package for storing and managing AI conversation history with any LLM provider. Built to handle the real-world needs of AI-powered applications, including streaming responses, function calling, and conversation branching.
 
 ## Features
