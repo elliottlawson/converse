@@ -1,0 +1,62 @@
+{
+    "name": "elliottlawson/converse",
+    "description": "A Laravel package for storing and managing AI conversation history in your applications",
+    "keywords": ["laravel", "ai", "conversations", "chat", "llm", "streaming"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Elliott Lawson"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^11.0|^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.4",
+        "laravel/pint": "^1.22",
+        "spatie/laravel-ray": "^1.40",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "pestphp/pest-plugin": true
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "ElliottLawson\\Converse\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ElliottLawson\\Converse\\Tests\\": "tests/",
+            "ElliottLawson\\Converse\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "@php vendor/bin/pest --parallel"
+        ],
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ElliottLawson\\Converse\\ConverseServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
