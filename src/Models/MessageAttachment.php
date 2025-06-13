@@ -14,12 +14,17 @@ class MessageAttachment extends Model
         'size',
         'metadata',
     ];
-    
+
+    public function getTable()
+    {
+        return config('converse.tables.message_attachments');
+    }
+
     protected $casts = [
         'metadata' => 'array',
         'size' => 'integer',
     ];
-    
+
     public function message(): BelongsTo
     {
         return $this->belongsTo(Message::class);

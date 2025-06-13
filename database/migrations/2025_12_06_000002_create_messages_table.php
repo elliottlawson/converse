@@ -8,9 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create(config('converse.tables.messages'), function (Blueprint $table) {
             $table->id();
-            $table->foreignId('conversation_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('conversation_id')->constrained(config('converse.tables.conversations'))->cascadeOnDelete();
             $table->enum('role', ['user', 'assistant', 'system', 'tool_call', 'tool_result']);
             $table->text('content')->nullable();
             $table->json('metadata')->nullable();
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->index(['conversation_id', 'created_at']);
             $table->index('role');
             $table->index('status');
@@ -28,6 +28,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists(config('converse.tables.messages'));
     }
 };

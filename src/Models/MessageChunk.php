@@ -9,25 +9,30 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class MessageChunk extends Model
 {
     use HasFactory;
-    
+
     const UPDATED_AT = null;
-    
+
     protected $fillable = [
         'content',
         'sequence',
         'metadata',
     ];
-    
+
+    public function getTable()
+    {
+        return config('converse.tables.message_chunks');
+    }
+
     protected $casts = [
         'metadata' => 'array',
         'created_at' => 'datetime',
     ];
-    
+
     protected static function newFactory()
     {
         return \ElliottLawson\Converse\Database\Factories\MessageChunkFactory::new();
     }
-    
+
     public function message(): BelongsTo
     {
         return $this->belongsTo(Message::class);
