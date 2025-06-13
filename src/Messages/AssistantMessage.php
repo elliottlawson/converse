@@ -10,12 +10,12 @@ class AssistantMessage
         public readonly string $content,
         public readonly array $metadata = []
     ) {}
-    
+
     public function getRole(): MessageRole
     {
         return MessageRole::Assistant;
     }
-    
+
     public function toArray(): array
     {
         return [
