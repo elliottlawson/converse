@@ -1,20 +1,10 @@
 <?php
 
 use ElliottLawson\Converse\Models\Conversation;
-use ElliottLawson\Converse\Traits\HasAIConversations;
+use ElliottLawson\Converse\Tests\Models\TestUser;
 use ElliottLawson\Converse\Enums\MessageRole;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
-
-// Create a test model that uses the trait
-class TestUser extends Model
-{
-    use HasAIConversations;
-    
-    protected $fillable = ['name', 'email'];
-    protected $table = 'users';
-}
 
 beforeEach(function () {
     // Create users table for testing
