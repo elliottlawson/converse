@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('conversations', function (Blueprint $table) {
+        Schema::create(config('converse.tables.conversations'), function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
             $table->nullableMorphs('conversable');
@@ -17,13 +17,13 @@ return new class extends Migration
             $table->json('context')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->index('created_at');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('conversations');
+        Schema::dropIfExists(config('converse.tables.conversations'));
     }
 };

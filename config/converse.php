@@ -11,12 +11,12 @@ return [
     |
     */
     'tables' => [
-        'conversations' => 'conversations',
-        'messages' => 'messages',
-        'message_chunks' => 'message_chunks',
-        'message_attachments' => 'message_attachments',
+        'conversations' => 'ai_conversations',
+        'messages' => 'ai_messages',
+        'message_chunks' => 'ai_message_chunks',
+        'message_attachments' => 'ai_message_attachments',
     ],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Model Classes
@@ -32,7 +32,7 @@ return [
         'message_chunk' => \ElliottLawson\Converse\Models\MessageChunk::class,
         'message_attachment' => \ElliottLawson\Converse\Models\MessageAttachment::class,
     ],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Storage Configuration
@@ -45,7 +45,7 @@ return [
         'disk' => env('CONVERSE_DISK', 'local'),
         'path' => env('CONVERSE_PATH', 'conversations'),
     ],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Cleanup Configuration
@@ -56,7 +56,7 @@ return [
     |
     */
     'prune_after_days' => env('CONVERSE_PRUNE_DAYS', null),
-    
+
     /*
     |--------------------------------------------------------------------------
     | Broadcasting Configuration
