@@ -13,12 +13,12 @@ it('can add multiple messages as simple strings', function () {
     ]);
 
     expect($messages)->toHaveCount(3)
-        ->and($messages[0]->content)->toBe('Hello, I need help')
-        ->and($messages[0]->role)->toBe(MessageRole::User)
-        ->and($messages[1]->content)->toBe('What seems to be the problem?')
-        ->and($messages[1]->role)->toBe(MessageRole::User)
-        ->and($messages[2]->content)->toBe('My code is not working')
-        ->and($messages[2]->role)->toBe(MessageRole::User);
+        ->and($messages->get(0)->content)->toBe('Hello, I need help')
+        ->and($messages->get(0)->role)->toBe(MessageRole::User)
+        ->and($messages->get(1)->content)->toBe('What seems to be the problem?')
+        ->and($messages->get(1)->role)->toBe(MessageRole::User)
+        ->and($messages->get(2)->content)->toBe('My code is not working')
+        ->and($messages->get(2)->role)->toBe(MessageRole::User);
 });
 
 it('can add messages with role and content', function () {
@@ -31,9 +31,9 @@ it('can add messages with role and content', function () {
     ]);
 
     expect($messages)->toHaveCount(3)
-        ->and($messages[0]->role)->toBe(MessageRole::System)
-        ->and($messages[1]->role)->toBe(MessageRole::User)
-        ->and($messages[2]->role)->toBe(MessageRole::Assistant);
+        ->and($messages->get(0)->role)->toBe(MessageRole::System)
+        ->and($messages->get(1)->role)->toBe(MessageRole::User)
+        ->and($messages->get(2)->role)->toBe(MessageRole::Assistant);
 });
 
 it('can add messages with type format', function () {
@@ -48,11 +48,11 @@ it('can add messages with type format', function () {
     ]);
 
     expect($messages)->toHaveCount(5)
-        ->and($messages[0]->role)->toBe(MessageRole::System)
-        ->and($messages[1]->role)->toBe(MessageRole::User)
-        ->and($messages[2]->role)->toBe(MessageRole::Assistant)
-        ->and($messages[3]->role)->toBe(MessageRole::ToolCall)
-        ->and($messages[4]->role)->toBe(MessageRole::ToolResult);
+        ->and($messages->get(0)->role)->toBe(MessageRole::System)
+        ->and($messages->get(1)->role)->toBe(MessageRole::User)
+        ->and($messages->get(2)->role)->toBe(MessageRole::Assistant)
+        ->and($messages->get(3)->role)->toBe(MessageRole::ToolCall)
+        ->and($messages->get(4)->role)->toBe(MessageRole::ToolResult);
 });
 
 it('can add messages with metadata', function () {
@@ -71,9 +71,9 @@ it('can add messages with metadata', function () {
         ],
     ]);
 
-    expect($messages[0]->metadata)->toHaveKey('timestamp', '2024-01-01 10:00:00')
-        ->and($messages[1]->metadata)->toHaveKey('model', 'dall-e-3')
-        ->and($messages[1]->metadata)->toHaveKey('cost', 0.04);
+    expect($messages->get(0)->metadata)->toHaveKey('timestamp', '2024-01-01 10:00:00')
+        ->and($messages->get(1)->metadata)->toHaveKey('model', 'dall-e-3')
+        ->and($messages->get(1)->metadata)->toHaveKey('cost', 0.04);
 });
 
 it('can mix different message formats', function () {
@@ -86,10 +86,10 @@ it('can mix different message formats', function () {
     ]);
 
     expect($messages)->toHaveCount(3)
-        ->and($messages[0]->role)->toBe(MessageRole::User)
-        ->and($messages[1]->role)->toBe(MessageRole::Assistant)
-        ->and($messages[2]->role)->toBe(MessageRole::User)
-        ->and($messages[2]->metadata)->toHaveKey('urgent', true);
+        ->and($messages->get(0)->role)->toBe(MessageRole::User)
+        ->and($messages->get(1)->role)->toBe(MessageRole::Assistant)
+        ->and($messages->get(2)->role)->toBe(MessageRole::User)
+        ->and($messages->get(2)->metadata)->toHaveKey('urgent', true);
 });
 
 it('throws exception for unknown message type', function () {
@@ -108,8 +108,8 @@ it('can handle enum instances in role field', function () {
         ['role' => 'assistant', 'content' => 'Using string'],
     ]);
 
-    expect($messages[0]->role)->toBe(MessageRole::User)
-        ->and($messages[1]->role)->toBe(MessageRole::Assistant);
+    expect($messages->get(0)->role)->toBe(MessageRole::User)
+        ->and($messages->get(1)->role)->toBe(MessageRole::Assistant);
 });
 
 it('can add messages using variadic parameters', function () {
@@ -122,10 +122,10 @@ it('can add messages using variadic parameters', function () {
     );
 
     expect($messages)->toHaveCount(3)
-        ->and($messages[0]->content)->toBe('First message')
-        ->and($messages[0]->role)->toBe(MessageRole::User)
-        ->and($messages[1]->content)->toBe('Second message')
-        ->and($messages[1]->role)->toBe(MessageRole::User)
-        ->and($messages[2]->content)->toBe('Third message')
-        ->and($messages[2]->role)->toBe(MessageRole::User);
+        ->and($messages->get(0)->content)->toBe('First message')
+        ->and($messages->get(0)->role)->toBe(MessageRole::User)
+        ->and($messages->get(1)->content)->toBe('Second message')
+        ->and($messages->get(1)->role)->toBe(MessageRole::User)
+        ->and($messages->get(2)->content)->toBe('Third message')
+        ->and($messages->get(2)->role)->toBe(MessageRole::User);
 });

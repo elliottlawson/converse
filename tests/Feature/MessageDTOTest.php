@@ -18,12 +18,12 @@ it('can add messages using DTOs', function () {
     ]);
 
     expect($messages)->toHaveCount(3)
-        ->and($messages[0]->role)->toBe(MessageRole::System)
-        ->and($messages[0]->content)->toBe('You are a helpful assistant')
-        ->and($messages[1]->role)->toBe(MessageRole::User)
-        ->and($messages[1]->content)->toBe('Hello!')
-        ->and($messages[2]->role)->toBe(MessageRole::Assistant)
-        ->and($messages[2]->content)->toBe('Hi there! How can I help?');
+        ->and($messages->get(0)->role)->toBe(MessageRole::System)
+        ->and($messages->get(0)->content)->toBe('You are a helpful assistant')
+        ->and($messages->get(1)->role)->toBe(MessageRole::User)
+        ->and($messages->get(1)->content)->toBe('Hello!')
+        ->and($messages->get(2)->role)->toBe(MessageRole::Assistant)
+        ->and($messages->get(2)->content)->toBe('Hi there! How can I help?');
 });
 
 it('can add messages with metadata using DTOs', function () {
@@ -34,9 +34,9 @@ it('can add messages with metadata using DTOs', function () {
         new AssistantMessage('Here is your image', ['model' => 'dall-e-3', 'cost' => 0.04]),
     ]);
 
-    expect($messages[0]->metadata)->toHaveKey('request_id', '123')
-        ->and($messages[1]->metadata)->toHaveKey('model', 'dall-e-3')
-        ->and($messages[1]->metadata)->toHaveKey('cost', 0.04);
+    expect($messages->get(0)->metadata)->toHaveKey('request_id', '123')
+        ->and($messages->get(1)->metadata)->toHaveKey('model', 'dall-e-3')
+        ->and($messages->get(1)->metadata)->toHaveKey('cost', 0.04);
 });
 
 it('can add tool messages using DTOs', function () {
@@ -47,9 +47,9 @@ it('can add tool messages using DTOs', function () {
         new ToolResultMessage('{"results": ["Laravel.com", "Laracasts.com"]}', ['call_id' => 'call_123']),
     ]);
 
-    expect($messages[0]->role)->toBe(MessageRole::ToolCall)
-        ->and($messages[1]->role)->toBe(MessageRole::ToolResult)
-        ->and($messages[0]->metadata)->toHaveKey('call_id', 'call_123');
+    expect($messages->get(0)->role)->toBe(MessageRole::ToolCall)
+        ->and($messages->get(1)->role)->toBe(MessageRole::ToolResult)
+        ->and($messages->get(0)->metadata)->toHaveKey('call_id', 'call_123');
 });
 
 it('can mix DTOs with other formats', function () {
@@ -63,10 +63,10 @@ it('can mix DTOs with other formats', function () {
     ]);
 
     expect($messages)->toHaveCount(4)
-        ->and($messages[0]->role)->toBe(MessageRole::System)
-        ->and($messages[1]->role)->toBe(MessageRole::User)
-        ->and($messages[2]->role)->toBe(MessageRole::Assistant)
-        ->and($messages[3]->role)->toBe(MessageRole::User);
+        ->and($messages->get(0)->role)->toBe(MessageRole::System)
+        ->and($messages->get(1)->role)->toBe(MessageRole::User)
+        ->and($messages->get(2)->role)->toBe(MessageRole::Assistant)
+        ->and($messages->get(3)->role)->toBe(MessageRole::User);
 });
 
 it('can use DTOs with variadic parameters', function () {
@@ -79,9 +79,9 @@ it('can use DTOs with variadic parameters', function () {
     );
 
     expect($messages)->toHaveCount(3)
-        ->and($messages[0]->content)->toBe('First question')
-        ->and($messages[1]->content)->toBe('First answer')
-        ->and($messages[2]->content)->toBe('Follow up');
+        ->and($messages->get(0)->content)->toBe('First question')
+        ->and($messages->get(1)->content)->toBe('First answer')
+        ->and($messages->get(2)->content)->toBe('Follow up');
 });
 
 it('throws exception for unknown object types', function () {

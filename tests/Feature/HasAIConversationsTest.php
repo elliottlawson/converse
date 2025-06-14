@@ -74,14 +74,16 @@ it('can create a conversation and add messages', function () {
 
     $conversation = $user->startConversation(['title' => 'AI Chat']);
 
-    $userMessage = $conversation->addUserMessage('Hello AI!');
-    $assistantMessage = $conversation->addAssistantMessage('Hello! How can I help you?');
+    $conversation->addUserMessage('Hello AI!');
+    $conversation->addAssistantMessage('Hello! How can I help you?');
 
-    expect($conversation->messages)->toHaveCount(2)
-        ->and($userMessage->role)->toBe(MessageRole::User)
-        ->and($userMessage->content)->toBe('Hello AI!')
-        ->and($assistantMessage->role)->toBe(MessageRole::Assistant)
-        ->and($assistantMessage->content)->toBe('Hello! How can I help you?');
+    $messages = $conversation->messages;
+
+    expect($messages)->toHaveCount(2)
+        ->and($messages->get(0)->role)->toBe(MessageRole::User)
+        ->and($messages->get(0)->content)->toBe('Hello AI!')
+        ->and($messages->get(1)->role)->toBe(MessageRole::Assistant)
+        ->and($messages->get(1)->content)->toBe('Hello! How can I help you?');
 });
 
 it('maintains relationship after retrieving conversation', function () {

@@ -2,6 +2,7 @@
 
 namespace ElliottLawson\Converse\Models;
 
+use ElliottLawson\Converse\Database\Factories\ConversationFactory;
 use ElliottLawson\Converse\Enums\MessageRole;
 use ElliottLawson\Converse\Enums\MessageStatus;
 use ElliottLawson\Converse\Events\ConversationCreated;
@@ -34,9 +35,9 @@ class Conversation extends Model
         return ['uuid'];
     }
 
-    protected static function newFactory()
+    protected static function newFactory(): ConversationFactory
     {
-        return \ElliottLawson\Converse\Database\Factories\ConversationFactory::new();
+        return ConversationFactory::new();
     }
 
     protected $casts = [
@@ -78,39 +79,41 @@ class Conversation extends Model
         return $this->hasOne(Message::class)->latestOfMany();
     }
 
-    public function addMessage(MessageRole $role, ?string $content = null, array $metadata = []): Message
+    public function addMessage(MessageRole $role, ?string $content = null, array $metadata = []): self
     {
-        return $this->messages()->create([
+        $this->messages()->create([
             'role' => $role,
             'content' => $content,
             'metadata' => $metadata,
             'status' => MessageStatus::Success,
-            'is_complete' => ! empty($content),
-            'completed_at' => ! empty($content) ? now() : null,
+            'is_complete' => filled($content),
+            'completed_at' => filled($content) ? now() : null,
         ]);
+
+        return $this;
     }
 
-    public function addUserMessage(string $content, array $metadata = []): Message
+    public function addUserMessage(string $content, array $metadata = []): self
     {
         return $this->addMessage(MessageRole::User, $content, $metadata);
     }
 
-    public function addAssistantMessage(string $content, array $metadata = []): Message
+    public function addAssistantMessage(string $content, array $metadata = []): self
     {
         return $this->addMessage(MessageRole::Assistant, $content, $metadata);
     }
 
-    public function addSystemMessage(string $content, array $metadata = []): Message
+    public function addSystemMessage(string $content, array $metadata = []): self
     {
         return $this->addMessage(MessageRole::System, $content, $metadata);
     }
 
-    public function addToolCallMessage(string $content, array $metadata = []): Message
+    public function addToolCallMessage(string $content, array $metadata = []): self
     {
         return $this->addMessage(MessageRole::ToolCall, $content, $metadata);
     }
 
-    public function addToolResultMessage(string $content, array $metadata = []): Message
+    public function addToolResultMessage(string $content, array $metadata = []): self
     {
         return $this->addMessage(MessageRole::ToolResult, $content, $metadata);
     }
@@ -151,12 +154,12 @@ class Conversation extends Model
             // Handle different formats
             if (is_string($message)) {
                 // Simple string assumes user message
-                $createdMessages->push($this->addUserMessage($message));
+                $createdMessages->push($this->createUserMessage($message));
             } elseif (is_object($message)) {
                 // Check if it's one of our message DTOs
                 if (method_exists($message, 'toArray')) {
                     $data = $message->toArray();
-                    $createdMessages->push($this->addMessage($data['role'], $data['content'], $data['metadata'] ?? []));
+                    $createdMessages->push($this->createMessage($data['role'], $data['content'], $data['metadata'] ?? []));
                 } else {
                     throw new \InvalidArgumentException('Unknown message object type: '.get_class($message));
                 }
@@ -165,22 +168,86 @@ class Conversation extends Model
                 $role = $message['role'] instanceof MessageRole ? $message['role'] : MessageRole::from($message['role']);
                 $metadata = $message['metadata'] ?? [];
 
-                $createdMessages->push($this->addMessage($role, $message['content'], $metadata));
+                $createdMessages->push($this->createMessage($role, $message['content'], $metadata));
             } elseif (isset($message['type']) && isset($message['content'])) {
                 // Alternative format with type
                 $metadata = $message['metadata'] ?? [];
 
                 $createdMessages->push(match ($message['type']) {
-                    'user' => $this->addUserMessage($message['content'], $metadata),
-                    'assistant' => $this->addAssistantMessage($message['content'], $metadata),
-                    'system' => $this->addSystemMessage($message['content'], $metadata),
-                    'tool_call' => $this->addToolCallMessage($message['content'], $metadata),
-                    'tool_result' => $this->addToolResultMessage($message['content'], $metadata),
+                    'user' => $this->createUserMessage($message['content'], $metadata),
+                    'assistant' => $this->createAssistantMessage($message['content'], $metadata),
+                    'system' => $this->createSystemMessage($message['content'], $metadata),
+                    'tool_call' => $this->createToolCallMessage($message['content'], $metadata),
+                    'tool_result' => $this->createToolResultMessage($message['content'], $metadata),
                     default => throw new \InvalidArgumentException("Unknown message type: {$message['type']}")
                 });
             }
         }
 
         return $createdMessages;
+    }
+
+    public function selectRecentMessages(int $count): self
+    {
+        $clone = clone $this;
+
+        $recentMessages = $this->messages()
+            ->orderBy('created_at')
+            ->skip(max(0, $this->messages()->count() - $count))
+            ->take($count)
+            ->get();
+
+        return $clone->setRelation('messages', $recentMessages);
+    }
+
+    public function getLastMessage(): ?Message
+    {
+        return $this->lastMessage;
+    }
+
+    public function getRecentMessages(int $count): Collection
+    {
+        return $this->messages()
+            ->orderBy('created_at')
+            ->skip(max(0, $this->messages()->count() - $count))
+            ->take($count)
+            ->get();
+    }
+
+    public function createMessage(MessageRole $role, ?string $content = null, array $metadata = []): Message
+    {
+        return $this->messages()->create([
+            'role' => $role,
+            'content' => $content,
+            'metadata' => $metadata,
+            'status' => MessageStatus::Success,
+            'is_complete' => filled($content),
+            'completed_at' => filled($content) ? now() : null,
+        ]);
+    }
+
+    public function createUserMessage(string $content, array $metadata = []): Message
+    {
+        return $this->createMessage(MessageRole::User, $content, $metadata);
+    }
+
+    public function createAssistantMessage(string $content, array $metadata = []): Message
+    {
+        return $this->createMessage(MessageRole::Assistant, $content, $metadata);
+    }
+
+    public function createSystemMessage(string $content, array $metadata = []): Message
+    {
+        return $this->createMessage(MessageRole::System, $content, $metadata);
+    }
+
+    public function createToolCallMessage(string $content, array $metadata = []): Message
+    {
+        return $this->createMessage(MessageRole::ToolCall, $content, $metadata);
+    }
+
+    public function createToolResultMessage(string $content, array $metadata = []): Message
+    {
+        return $this->createMessage(MessageRole::ToolResult, $content, $metadata);
     }
 }
