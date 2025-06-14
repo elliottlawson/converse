@@ -112,4 +112,4 @@ All models support:
 
 ## Next Steps
 
-Ready to get started? Check out [Installation](/guide/installation) to set up Converse, then jump to [Quick Start](/guide/getting-started) to create your first AI-powered conversation! 
+Ready to get started? Check out [Installation](/guide/installation) to install Converse, then continue to [Setup](/guide/getting-started) to create your first AI-powered conversation! 

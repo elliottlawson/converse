@@ -1,4 +1,4 @@
-# Quick Start
+# Setup
 
 Get up and running with your first AI conversation in minutes.
 

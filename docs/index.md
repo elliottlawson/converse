@@ -7,7 +7,7 @@ hero:
   tagline: AI SDKs are great at sending messages, but terrible at having conversations. Converse makes AI conversations flow as naturally as Eloquent makes database queries.
   actions:
     - theme: brand
-      text: Quick Start
+      text: Setup
       link: /guide/getting-started
     - theme: alt
       text: View on GitHub
@@ -40,7 +40,7 @@ features:
 
 ---
 
-## Quick Start
+## Quick Setup
 
 Install the package via Composer:
 

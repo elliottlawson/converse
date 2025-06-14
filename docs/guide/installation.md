@@ -28,7 +28,7 @@ That's it! Converse is now installed with sensible defaults.
 
 ### Publishing the Config File
 
-Only publish the config if you need to customize settings:
+If you need to customize settings, you can publish the config:
 
 ```bash
 php artisan vendor:publish --tag=converse-config
@@ -149,6 +149,6 @@ php artisan clear-compiled
 
 ## Next Steps
 
-- Continue to [Quick Start](/guide/getting-started) to create your first conversation
+- Continue to [Setup](/guide/getting-started) to create your first conversation
 - Learn about the [Conversation Model](/guide/conversations)
 - Explore [Message Types](/guide/messages) 
