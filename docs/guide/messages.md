@@ -118,9 +118,9 @@ Messages are automatically ordered by creation time:
 
 ```php
 // Messages are ordered oldest to newest by default
-foreach ($conversation->messages as $message) {
-    echo "{$message->role}: {$message->content}\n";
-}
+$formatted = $conversation->messages
+    ->map(fn($message) => "{$message->role}: {$message->content}")
+    ->join("\n");
 
 // Get messages in reverse order
 $recentFirst = $conversation->messages()->latest()->get();
