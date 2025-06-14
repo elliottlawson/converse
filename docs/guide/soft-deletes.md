@@ -295,5 +295,5 @@ public function deleteConversation(Request $request, Conversation $conversation)
 ## Next Steps
 
 - Learn about [Events](/guide/events) triggered by soft deletes
-- Implement [Archiving](/guide/archiving) strategies
-- Set up [Scheduled Tasks](/guide/scheduling) for automatic cleanup 
+- Explore [Advanced Usage](/guide/advanced) for more patterns
+- See [Broadcasting](/guide/broadcasting) for real-time delete notifications 
