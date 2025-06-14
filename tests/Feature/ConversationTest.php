@@ -18,11 +18,13 @@ it('can create conversation', function () {
 it('can add message to conversation', function () {
     $conversation = Conversation::factory()->create();
 
-    $message = $conversation->addMessage(
+    $conversation->addMessage(
         MessageRole::User,
         'Hello, world!',
         ['test' => true]
     );
+    
+    $message = $conversation->getLastMessage();
 
     expect($message->role)->toBe(MessageRole::User)
         ->and($message->content)->toBe('Hello, world!')

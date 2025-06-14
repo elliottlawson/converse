@@ -60,18 +60,51 @@ $conversation = $user->startConversation([
 ```php
 use ElliottLawson\Converse\Models\Conversation;
 
-// User messages
+// Individual messages
 $conversation->addUserMessage('How do I deploy Laravel to production?');
-
-// Assistant responses  
 $conversation->addAssistantMessage('There are several ways to deploy Laravel...');
-
-// System prompts
 $conversation->addSystemMessage('You are a helpful Laravel expert.');
 
 // Tool/Function calls
 $conversation->addToolCallMessage('get_deployment_options(framework="laravel")');
 $conversation->addToolResultMessage('{"options": ["Forge", "Vapor", "Docker"]}');
+
+// Fluent chaining (perfect for building conversation context)
+$conversation
+    ->addSystemMessage('You are a Laravel expert with 10+ years experience')
+    ->addUserMessage('Context: I have a Laravel app that needs deployment')
+    ->addUserMessage('Requirements: High availability, auto-scaling, zero downtime')
+    ->addUserMessage('Question: What deployment strategy do you recommend?');
+```
+
+### Two APIs: Choose What You Need
+
+**Fluent API** - Returns `Conversation` for chaining:
+```php
+$conversation = $conversation
+    ->addSystemMessage('You are helpful')
+    ->addUserMessage('Hello')
+    ->addAssistantMessage('Hi there!');
+```
+
+**Direct API** - Returns `Message` objects when you need immediate access:
+```php
+$message = $conversation->createUserMessage('Hello');
+$messageId = $message->id;
+$content = $message->content;
+```
+
+### Helper Methods
+
+```php
+// Get the most recently added message
+$lastMessage = $conversation->getLastMessage();
+
+// Get recent messages as a collection
+$recentMessages = $conversation->getRecentMessages(5);
+
+// Create a conversation subset with recent messages (useful for context windows)
+$subset = $conversation->selectRecentMessages(10);
 ```
 
 ### Bulk Importing Messages
