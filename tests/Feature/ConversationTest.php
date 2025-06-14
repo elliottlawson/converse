@@ -23,7 +23,7 @@ it('can add message to conversation', function () {
         'Hello, world!',
         ['test' => true]
     );
-    
+
     $message = $conversation->getLastMessage();
 
     expect($message->role)->toBe(MessageRole::User)

@@ -76,7 +76,7 @@ it('can create a conversation and add messages', function () {
 
     $conversation->addUserMessage('Hello AI!');
     $conversation->addAssistantMessage('Hello! How can I help you?');
-    
+
     $messages = $conversation->messages;
 
     expect($messages)->toHaveCount(2)

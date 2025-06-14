@@ -98,13 +98,13 @@ it('can chain add message methods for fluent API', function () {
 
 it('can use selectRecentMessages helper', function () {
     $conversation = Conversation::factory()->create();
-    
+
     $conversation->addUserMessage('Message 1');
     $conversation->addUserMessage('Message 2');
     $conversation->addUserMessage('Message 3');
 
     $subset = $conversation->selectRecentMessages(2);
-    
+
     expect($subset->messages)->toHaveCount(2)
         ->and($subset->messages->first()->content)->toBe('Message 2')
         ->and($subset->messages->last()->content)->toBe('Message 3');
@@ -112,13 +112,13 @@ it('can use selectRecentMessages helper', function () {
 
 it('can use getRecentMessages helper', function () {
     $conversation = Conversation::factory()->create();
-    
+
     $conversation->addUserMessage('Message 1');
     $conversation->addUserMessage('Message 2');
     $conversation->addUserMessage('Message 3');
 
     $messages = $conversation->getRecentMessages(2);
-    
+
     expect($messages)->toHaveCount(2)
         ->and($messages->first()->content)->toBe('Message 2')
         ->and($messages->last()->content)->toBe('Message 3');
