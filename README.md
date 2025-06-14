@@ -2,12 +2,16 @@
   <img src="converse-logo.png" alt="Converse Logo" width="400">
 </p>
 
+<br>
+
 <p align="center">
   <a href="https://github.com/elliottlawson/converse/actions/workflows/tests.yml"><img src="https://github.com/elliottlawson/converse/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
   <a href="https://packagist.org/packages/elliottlawson/converse"><img src="https://poser.pugx.org/elliottlawson/converse/v/stable" alt="Latest Stable Version"></a>
   <a href="https://packagist.org/packages/elliottlawson/converse"><img src="https://poser.pugx.org/elliottlawson/converse/downloads" alt="Total Downloads"></a>
   <a href="https://packagist.org/packages/elliottlawson/converse"><img src="https://poser.pugx.org/elliottlawson/converse/license" alt="License"></a>
 </p>
+
+<br>
 
 # Converse - AI Conversation Management for Laravel
 
