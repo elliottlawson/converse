@@ -1,31 +1,23 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'Laravel Converse',
+  title: 'Converse',
   description: 'A Laravel package for storing and managing AI conversation history',
   
   head: [
-    ['link', { rel: 'icon', href: '/favicon.ico' }],
+    ['link', { rel: 'icon', href: '/converse-icon.png' }],
     ['meta', { name: 'theme-color', content: '#3eaf7c' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { property: 'og:title', content: 'Laravel Converse' }],
+    ['meta', { property: 'og:title', content: 'Converse' }],
     ['meta', { property: 'og:description', content: 'A Laravel package for storing and managing AI conversation history with any LLM provider' }],
   ],
 
   themeConfig: {
-    logo: '/logo.svg',
+    logo: '/converse-icon.png',
     
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'API', link: '/api/conversations' },
-      { text: 'Examples', link: '/examples/basic-chat' },
-      {
-        text: 'Links',
-        items: [
-          { text: 'GitHub', link: 'https://github.com/elliottlawson/converse' },
-          { text: 'Packagist', link: 'https://packagist.org/packages/elliottlawson/converse' }
-        ]
-      }
+      { text: 'API', link: '/api/conversations' }
     ],
 
     sidebar: {
@@ -33,7 +25,7 @@ export default defineConfig({
         {
           text: 'Introduction',
           items: [
-            { text: 'What is Laravel Converse?', link: '/guide/what-is-converse' },
+            { text: 'What is Converse?', link: '/guide/what-is-converse' },
             { text: 'Getting Started', link: '/guide/getting-started' },
             { text: 'Installation', link: '/guide/installation' }
           ]
@@ -52,8 +44,9 @@ export default defineConfig({
           items: [
             { text: 'Conditional Logic', link: '/guide/conditional-logic' },
             { text: 'View Support', link: '/guide/view-support' },
-            { text: 'Soft Deletes', link: '/guide/soft-deletes' },
-            { text: 'Broadcasting', link: '/guide/broadcasting' }
+            { text: 'Bulk Operations', link: '/guide/bulk-operations' },
+            { text: 'Advanced Usage', link: '/guide/advanced' },
+            { text: 'Soft Deletes', link: '/guide/soft-deletes' }
           ]
         }
       ],
@@ -66,18 +59,6 @@ export default defineConfig({
             { text: 'Message Chunks', link: '/api/message-chunks' },
             { text: 'Traits', link: '/api/traits' },
             { text: 'Events', link: '/api/events' }
-          ]
-        }
-      ],
-      '/examples/': [
-        {
-          text: 'Examples',
-          items: [
-            { text: 'Basic Chat', link: '/examples/basic-chat' },
-            { text: 'Streaming Responses', link: '/examples/streaming' },
-            { text: 'Function Calling', link: '/examples/function-calling' },
-            { text: 'Multi-Provider Setup', link: '/examples/multi-provider' },
-            { text: 'Real-time Updates', link: '/examples/real-time' }
           ]
         }
       ]

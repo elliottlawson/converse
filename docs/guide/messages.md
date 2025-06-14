@@ -1,10 +1,43 @@
 # Messages
 
-Messages are the core building blocks of conversations in Laravel Converse. Each message represents a single interaction in the conversation history.
+Messages are the core building blocks of conversations in Converse. Each message represents a single interaction in the conversation history.
+
+## Understanding Messages
+
+A Message is a standard Eloquent model that can be queried and manipulated just like any other Laravel model. We've enhanced it with helpful methods and scopes specifically designed for AI conversations, but at its core, it's a regular model you already know how to work with.
+
+## Two Ways to Work with Messages
+
+Converse provides two distinct approaches for adding messages to conversations:
+
+### Fluent API (Returns Conversation)
+
+The `add*Message` methods return the conversation instance, allowing you to chain multiple operations:
+
+```php
+$conversation = $conversation
+    ->addSystemMessage('You are helpful')
+    ->addUserMessage('Hello')
+    ->addAssistantMessage('Hi there!');
+```
+
+Use this when you're building a conversation flow and don't need immediate access to the message objects.
+
+### Message Creation API (Returns Message)
+
+The `create*Message` methods return the actual Message model instance:
+
+```php
+$message = $conversation->createUserMessage('Hello');
+$messageId = $message->id;
+$content = $message->content;
+```
+
+Use this when you need to work with the message immediately after creation (e.g., getting its ID, updating metadata, etc.).
 
 ## Message Types
 
-Laravel Converse supports all standard AI conversation message types:
+Converse supports all standard AI conversation message types:
 
 ### User Messages
 
@@ -59,33 +92,7 @@ $conversation->addUserMessage('Deploy my app', [
 ]);
 ```
 
-## Fluent vs Direct API
 
-Laravel Converse provides two ways to work with messages:
-
-### Fluent API (Chaining)
-
-Perfect for building conversation flows:
-
-```php
-$conversation
-    ->addSystemMessage('You are helpful')
-    ->addUserMessage('Hello')
-    ->addAssistantMessage('Hi there!');
-```
-
-### Direct API (Immediate Access)
-
-When you need the message object immediately:
-
-```php
-$message = $conversation->createUserMessage('Hello');
-$messageId = $message->id;
-$messageContent = $message->content;
-
-// Update message metadata
-$message->update(['metadata' => ['edited' => true]]);
-```
 
 ## Retrieving Messages
 
@@ -105,15 +112,30 @@ $lastMessage = $conversation->messages()->latest()->first();
 $messages = $conversation->messages()->paginate(20);
 ```
 
+## Helper Methods
+
+Converse provides convenient helper methods for common operations:
+
+```php
+// Get the most recently added message
+$lastMessage = $conversation->getLastMessage();
+
+// Get recent messages as a collection
+$recentMessages = $conversation->getRecentMessages(5);
+
+// Create a conversation subset with recent messages (useful for context windows)
+$subset = $conversation->selectRecentMessages(10);
+```
+
 ## Message Ordering
 
 Messages are automatically ordered by creation time:
 
 ```php
 // Messages are ordered oldest to newest by default
-foreach ($conversation->messages as $message) {
-    echo "{$message->role}: {$message->content}\n";
-}
+$formatted = $conversation->messages
+    ->map(fn($message) => "{$message->role}: {$message->content}")
+    ->join("\n");
 
 // Get messages in reverse order
 $recentFirst = $conversation->messages()->latest()->get();
@@ -124,11 +146,9 @@ $recentFirst = $conversation->messages()->latest()->get();
 For performance when adding many messages:
 
 ```php
-$messages = [
+$conversation->messages()->createMany([
     ['role' => 'system', 'content' => 'You are helpful'],
     ['role' => 'user', 'content' => 'Hello'],
     ['role' => 'assistant', 'content' => 'Hi!'],
-];
-
-$conversation->messages()->createMany($messages);
+]);
 ``` 
