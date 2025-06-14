@@ -397,5 +397,5 @@ class MessageSanitizer
 ## Next Steps
 
 - Explore [API Reference](/api/conversations) for all available methods
-- Learn about [Broadcasting](/guide/broadcasting) for real-time features
+- Learn about [Events](/guide/events) for real-time features
 - See [Examples](/examples/basic-chat) of advanced patterns in action 

@@ -65,4 +65,4 @@ $message->restore();
 
 - Learn about [Events](/guide/events) triggered by soft deletes
 - Explore [Advanced Usage](/guide/advanced) for more patterns
-- See [Broadcasting](/guide/broadcasting) for real-time delete notifications 
+- See [Events](/guide/events) for real-time delete notifications 

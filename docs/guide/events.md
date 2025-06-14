@@ -197,76 +197,25 @@ class CheckForModeration implements ShouldQueue
 }
 ```
 
-## Broadcasting Configuration
+## Broadcasting
 
-Set up broadcasting for real-time features:
+All Converse events automatically broadcast to Laravel Echo channels for real-time updates:
 
-```php
-// config/broadcasting.php
-'channels' => [
-    'user.{userId}' => function ($user, $userId) {
-        return (int) $user->id === (int) $userId;
-    },
-    
-    'conversation.{conversationId}' => function ($user, $conversationId) {
-        return $user->conversations()
-            ->where('id', $conversationId)
-            ->exists();
-    },
-],
-```
+| Event | Channel | Event Name |
+|-------|---------|------------|
+| `ConversationCreated` | `private-user.{userId}` | `conversation.created` |
+| `MessageCreated` | `private-conversation.{conversationId}` | `message.created` |
+| `MessageUpdated` | `private-conversation.{conversationId}` | `message.updated` |
+| `MessageCompleted` | `private-conversation.{conversationId}` | `message.completed` |
+| `ChunkReceived` | `private-conversation.{conversationId}` | `chunk.received` |
 
-## Frontend Integration
-
-### Using React Hooks
-
-Listen for events using the Laravel Echo React hook:
-
-```jsx
-import { useEcho } from '@laravel/echo-react';
-
-function ConversationComponent({ conversationId }) {
-    // Listen for new messages
-    useEcho(
-        `private-conversation.${conversationId}`,
-        'MessageCreated',
-        (e) => {
-            console.log('New message:', e);
-            // Update your UI with the new message
-        }
-    );
-    
-    // Listen for streaming chunks
-    useEcho(
-        `private-conversation.${conversationId}`,
-        'StreamUpdate',
-        (e) => {
-            console.log('Streaming chunk:', e.chunk);
-            // Append chunk to message being displayed
-        }
-    );
-}
-```
-
-### Classic JavaScript Approach
+To listen for these events:
 
 ```javascript
-// Listen for new messages
-Echo.private(`user.${userId}`)
-    .listen('NewMessage', (e) => {
-        console.log('New message:', e.message);
-        // Update UI
-    });
-
-// Listen for streaming updates
+// Listen for new messages in a conversation
 Echo.private(`conversation.${conversationId}`)
-    .listen('StreamUpdate', (e) => {
-        // Append chunk to message
-        appendChunkToMessage(e.messageId, e.chunk);
-    })
-    .listen('MessageCompleted', (e) => {
-        // Mark message as complete
-        markMessageComplete(e.messageId);
+    .listen('.message.created', (e) => {
+        console.log('New message:', e.message);
     });
 ```
 
@@ -275,5 +224,4 @@ Echo.private(`conversation.${conversationId}`)
 ## Next Steps
 
 - Implement [Real-time Updates](/examples/real-time) in your application
-- Learn about [Broadcasting](/guide/broadcasting) setup
 - Explore [Streaming](/guide/streaming) with events 
