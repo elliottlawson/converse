@@ -26,7 +26,7 @@ export default defineConfig({
           text: 'Introduction',
           items: [
             { text: 'What is Converse?', link: '/guide/what-is-converse' },
-            { text: 'Getting Started', link: '/guide/getting-started' },
+            { text: 'Quick Start', link: '/guide/getting-started' },
             { text: 'Installation', link: '/guide/installation' }
           ]
         },
