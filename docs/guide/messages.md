@@ -6,6 +6,35 @@ Messages are the core building blocks of conversations in Converse. Each message
 
 A Message is a standard Eloquent model that can be queried and manipulated just like any other Laravel model. We've enhanced it with helpful methods and scopes specifically designed for AI conversations, but at its core, it's a regular model you already know how to work with.
 
+## Two Ways to Work with Messages
+
+Converse provides two distinct approaches for adding messages to conversations:
+
+### Fluent API (Returns Conversation)
+
+The `add*Message` methods return the conversation instance, allowing you to chain multiple operations:
+
+```php
+$conversation = $conversation
+    ->addSystemMessage('You are helpful')
+    ->addUserMessage('Hello')
+    ->addAssistantMessage('Hi there!');
+```
+
+Use this when you're building a conversation flow and don't need immediate access to the message objects.
+
+### Message Creation API (Returns Message)
+
+The `create*Message` methods return the actual Message model instance:
+
+```php
+$message = $conversation->createUserMessage('Hello');
+$messageId = $message->id;
+$content = $message->content;
+```
+
+Use this when you need to work with the message immediately after creation (e.g., getting its ID, updating metadata, etc.).
+
 ## Message Types
 
 Converse supports all standard AI conversation message types:
@@ -63,33 +92,7 @@ $conversation->addUserMessage('Deploy my app', [
 ]);
 ```
 
-## Fluent vs Direct API
 
-Converse provides two ways to work with messages:
-
-### Fluent API (Chaining)
-
-Perfect for building conversation flows:
-
-```php
-$conversation
-    ->addSystemMessage('You are helpful')
-    ->addUserMessage('Hello')
-    ->addAssistantMessage('Hi there!');
-```
-
-### Direct API (Immediate Access)
-
-When you need the message object immediately:
-
-```php
-$message = $conversation->createUserMessage('Hello');
-$messageId = $message->id;
-$messageContent = $message->content;
-
-// Update message metadata
-$message->update(['metadata' => ['edited' => true]]);
-```
 
 ## Retrieving Messages
 
@@ -128,11 +131,9 @@ $recentFirst = $conversation->messages()->latest()->get();
 For performance when adding many messages:
 
 ```php
-$messages = [
+$conversation->messages()->createMany([
     ['role' => 'system', 'content' => 'You are helpful'],
     ['role' => 'user', 'content' => 'Hello'],
     ['role' => 'assistant', 'content' => 'Hi!'],
-];
-
-$conversation->messages()->createMany($messages);
+]);
 ``` 
