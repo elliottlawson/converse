@@ -25,8 +25,8 @@ Use inline methods for simple, single message conditions:
 
 ```php
 $conversation = $conversation
-    ->addMessageIf($user->needs_context, 'system', 'Include previous context in responses.')
-    ->addMessageUnless($user->allows_links, 'system', 'Do not include external links.')
+    ->addSystemMessageIf($user->needs_context, 'Include previous context in responses.')
+    ->addSystemMessageUnless($user->allows_links, 'Do not include external links.')
     ->addUserMessage($userInput);
 ```
 
@@ -59,8 +59,9 @@ Here's a practical example showing both approaches working together:
 // Using both approaches for different needs
 $conversation = $conversation
     // Simple inline conditionals
-    ->addMessageIf($user->prefers_examples, 'system', 'Include examples in your responses')
-    ->addMessageUnless($user->allows_links, 'system', 'Do not include external URLs')
+    ->addSystemMessageIf($user->needs_help, 'Include helpful examples in responses')
+    ->addUserMessageIf($user->has_context, 'Continue from our previous discussion')
+    ->addAssistantMessageUnless($user->is_anonymous, "Welcome back, {$user->name}!")
     
     // Block conditional for complex logic
     ->when($user->subscription === 'premium', function ($conversation) use ($user) {
@@ -79,11 +80,15 @@ $conversation = $conversation
 - `when($condition, $callback, $default)` - Execute callback if true, otherwise execute default
 - `unless($condition, $callback)` - Execute callback if condition is false
 
-### Inline Conditionals
-- `addMessageIf($condition, $role, $content, $metadata = [])` - Add message if condition is true
-- `addMessageUnless($condition, $role, $content, $metadata = [])` - Add message if condition is false
-- `createMessageIf(...)` - Same as above but returns the message instance
-- `createMessageUnless(...)` - Same as above but returns the message instance
+### Inline Conditionals (Type-Specific)
+- `addUserMessageIf($condition, $content, $metadata = [])` - Add user message if condition is true
+- `addAssistantMessageIf($condition, $content, $metadata = [])` - Add assistant message if condition is true
+- `addSystemMessageIf($condition, $content, $metadata = [])` - Add system message if condition is true
+- `addToolCallMessageIf($condition, $content, $metadata = [])` - Add tool call message if condition is true
+- `addToolResultMessageIf($condition, $content, $metadata = [])` - Add tool result message if condition is true
+- `add*MessageUnless(...)` - Same methods but add message if condition is false
+- `create*MessageIf(...)` - Same as above but returns the message instance
+- `create*MessageUnless(...)` - Same as above but returns the message instance
 
 ## Next Steps
 

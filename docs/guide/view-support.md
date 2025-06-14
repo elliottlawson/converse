@@ -152,14 +152,12 @@ Views work seamlessly with the conditional helper methods:
 
 ```php
 $conversation
-    ->addMessageIf(
+    ->addSystemMessageIf(
         $user->wants_examples,
-        'system',
         view('prompts.include-examples')
     )
-    ->addMessageUnless(
+    ->addSystemMessageUnless(
         $user->is_premium,
-        'system',
         view('prompts.limitations.free-tier')
     )
     ->when($user->has_custom_instructions, function ($conversation) use ($user) {
