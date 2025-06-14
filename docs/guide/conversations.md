@@ -1,6 +1,10 @@
 # Conversations
 
-Conversations are the primary container for organizing message history in Laravel Converse. Each conversation represents a distinct chat session with its own messages, metadata, and lifecycle.
+Conversations are the primary container for organizing message history in Converse. Each conversation represents a distinct chat session with its own messages, metadata, and lifecycle.
+
+## Understanding Conversations
+
+A Conversation is a standard Eloquent model that can be queried and manipulated just like any other Laravel model. We've enhanced it with helpful methods and scopes specifically designed for managing AI chat sessions, but at its core, it's a regular model you already know how to work with.
 
 ## Creating Conversations
 
@@ -130,24 +134,7 @@ $highValueConversations = $user->conversations()
     ->get();
 ```
 
-## Finding Conversations by UUID
-
-UUIDs are useful for public URLs, APIs, and external references:
-
-```php
-// For public links or API endpoints
-$conversation = Conversation::where('uuid', $uuid)->firstOrFail();
-
-// Verify ownership if needed
-if ($conversation->conversable_id !== $user->id) {
-    abort(403);
-}
-
-// Generate public shareable link
-$shareUrl = route('conversations.show', ['uuid' => $conversation->uuid]);
-```
-
-## Conversation Scopes
+## Built-in Scopes
 
 Use built-in scopes for common queries:
 
@@ -203,78 +190,7 @@ $conversation->restore();
 $conversation->forceDelete();
 ```
 
-## Best Practices
 
-1. **Use meaningful titles**: Help users identify conversations later
-2. **Store relevant metadata**: Track model, purpose, and other context
-3. **Clean up regularly**: Implement retention policies for old conversations
-4. **Use UUIDs for public access**: Never expose database IDs in URLs
-5. **Implement access control**: Always verify ownership before allowing access
-
-```php
-// Good practice: Comprehensive conversation creation
-$conversation = $user->startConversation([
-    'title' => $this->generateTitle($request->input('topic')),
-    'metadata' => [
-        'provider' => config('ai.default_provider'),
-        'model' => config('ai.default_model'),
-        'source' => $request->input('source', 'web'),
-        'ip_address' => $request->ip(),
-        'user_agent' => $request->userAgent(),
-        'initial_topic' => $request->input('topic'),
-    ],
-]);
-```
-
-## Advanced Usage
-
-### Cloning Conversations
-
-```php
-// Clone a conversation with its messages
-$original = Conversation::find($id);
-$clone = $original->replicate();
-$clone->title = $original->title . ' (Copy)';
-$clone->save();
-
-// Copy messages
-$original->messages->each(function ($message) use ($clone) {
-    $clone->messages()->create($message->only([
-        'role', 'content', 'metadata'
-    ]));
-});
-```
-
-### Exporting Conversations
-
-```php
-// Export to array
-$export = $conversation->toArray();
-$export['messages'] = $conversation->messages->toArray();
-
-// Export to JSON
-$json = json_encode($export, JSON_PRETTY_PRINT);
-
-// Save to file
-Storage::put("exports/conversation-{$conversation->uuid}.json", $json);
-```
-
-### Searching Conversations
-
-```php
-// Full-text search in messages
-$results = $user->conversations()
-    ->whereHas('messages', function ($query) use ($searchTerm) {
-        $query->where('content', 'like', "%{$searchTerm}%");
-    })
-    ->get();
-
-// Search by date range and metadata
-$filtered = $user->conversations()
-    ->whereBetween('created_at', [$startDate, $endDate])
-    ->where('metadata->provider', 'openai')
-    ->get();
-```
 
 ## Next Steps
 
