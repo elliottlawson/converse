@@ -292,5 +292,5 @@ DB::transaction(function () use ($message, $chunks) {
 ## Next Steps
 
 - Learn about [Events](/guide/events) fired during streaming
-- See [Real-time Example](/examples/real-time) for complete implementation
+- Implement real-time updates using Laravel Broadcasting
 - Explore [Message Chunks API](/api/message-chunks) reference 

@@ -223,5 +223,5 @@ Echo.private(`conversation.${conversationId}`)
 
 ## Next Steps
 
-- Implement [Real-time Updates](/examples/real-time) in your application
+- Implement real-time updates using Laravel Echo in your application
 - Explore [Streaming](/guide/streaming) with events 

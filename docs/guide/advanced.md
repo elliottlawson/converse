@@ -398,4 +398,4 @@ class MessageSanitizer
 
 - Explore [API Reference](/api/conversations) for all available methods
 - Learn about [Events](/guide/events) for real-time features
-- See [Examples](/examples/basic-chat) of advanced patterns in action 
+- Apply these advanced patterns in your own applications 

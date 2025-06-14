@@ -191,4 +191,4 @@ This approach keeps your controller logic clean while managing complex condition
 
 - Explore [Conditional Logic](/guide/conditional-logic) to make your prompts dynamic
 - Learn about [Message Types](/guide/messages) and when to use each
-- See [Examples](/examples/basic-chat) of view-based prompts in action 
+- Create your own view-based prompts for complex AI interactions 

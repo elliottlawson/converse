@@ -18,7 +18,6 @@ export default defineConfig({
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'API', link: '/api/conversations' },
-      { text: 'Examples', link: '/examples/basic-chat' },
       {
         text: 'Links',
         items: [
@@ -67,18 +66,6 @@ export default defineConfig({
             { text: 'Message Chunks', link: '/api/message-chunks' },
             { text: 'Traits', link: '/api/traits' },
             { text: 'Events', link: '/api/events' }
-          ]
-        }
-      ],
-      '/examples/': [
-        {
-          text: 'Examples',
-          items: [
-            { text: 'Basic Chat', link: '/examples/basic-chat' },
-            { text: 'Streaming Responses', link: '/examples/streaming' },
-            { text: 'Function Calling', link: '/examples/function-calling' },
-            { text: 'Multi-Provider Setup', link: '/examples/multi-provider' },
-            { text: 'Real-time Updates', link: '/examples/real-time' }
           ]
         }
       ]

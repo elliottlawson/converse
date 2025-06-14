@@ -94,4 +94,4 @@ $conversation = $conversation
 
 - Learn about [View Support](/guide/view-support) for managing complex prompts
 - Explore [Streaming Responses](/guide/streaming) for real-time conversations
-- See practical [Examples](/examples/basic-chat) using conditional logic 
+- Apply these conditional patterns in your own conversations 
