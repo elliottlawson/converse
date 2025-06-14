@@ -1,0 +1,1 @@
+This is an assistant response from a view.
