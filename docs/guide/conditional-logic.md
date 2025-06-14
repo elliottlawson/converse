@@ -59,7 +59,7 @@ Here's a practical example showing both approaches working together:
 // Using both approaches for different needs
 $conversation = $conversation
     // Simple inline conditionals
-    ->addMessageIf($user->language !== 'en', 'system', "Respond in {$user->language}")
+    ->addMessageIf($user->prefers_examples, 'system', 'Include examples in your responses')
     ->addMessageUnless($user->allows_links, 'system', 'Do not include external URLs')
     
     // Block conditional for complex logic
