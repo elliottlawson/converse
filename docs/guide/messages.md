@@ -112,6 +112,21 @@ $lastMessage = $conversation->messages()->latest()->first();
 $messages = $conversation->messages()->paginate(20);
 ```
 
+## Helper Methods
+
+Converse provides convenient helper methods for common operations:
+
+```php
+// Get the most recently added message
+$lastMessage = $conversation->getLastMessage();
+
+// Get recent messages as a collection
+$recentMessages = $conversation->getRecentMessages(5);
+
+// Create a conversation subset with recent messages (useful for context windows)
+$subset = $conversation->selectRecentMessages(10);
+```
+
 ## Message Ordering
 
 Messages are automatically ordered by creation time:

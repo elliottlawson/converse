@@ -2,21 +2,6 @@
 
 Converse provides several methods for efficiently working with multiple messages at once, whether you're importing conversation history, migrating from other systems, or building conversation context.
 
-## Helper Methods
-
-These helper methods make it easy to work with messages:
-
-```php
-// Get the most recently added message
-$lastMessage = $conversation->getLastMessage();
-
-// Get recent messages as a collection
-$recentMessages = $conversation->getRecentMessages(5);
-
-// Create a conversation subset with recent messages (useful for context windows)
-$subset = $conversation->selectRecentMessages(10);
-```
-
 ## Bulk Importing Messages
 
 The `addMessages()` method allows you to add multiple messages at once, perfect for importing conversation history or migrating from other systems.
@@ -70,41 +55,7 @@ $messages = $conversation->addMessages([
 ]);
 ```
 
-### Using Role Arrays
 
-You can specify roles using arrays with the MessageRole enum or strings:
-
-```php
-use ElliottLawson\Converse\Enums\MessageRole;
-
-// With roles using enum directly
-$messages = $conversation->addMessages([
-    ['role' => MessageRole::System, 'content' => 'You are a Laravel expert'],
-    ['role' => MessageRole::User, 'content' => 'How do I deploy to production?'],
-    ['role' => MessageRole::Assistant, 'content' => 'Let me help you with deployment...'],
-]);
-
-// With roles as strings (automatically converted to enum)
-$messages = $conversation->addMessages([
-    ['role' => 'system', 'content' => 'You are a Laravel expert'],
-    ['role' => 'user', 'content' => 'How do I deploy to production?'],
-    ['role' => 'assistant', 'content' => 'Let me help you with deployment...'],
-]);
-
-// Including metadata
-$messages = $conversation->addMessages([
-    [
-        'role' => 'user', 
-        'content' => 'Analyze this code',
-        'metadata' => ['source' => 'web_ui', 'session_id' => 'abc123']
-    ],
-    [
-        'role' => 'assistant',
-        'content' => 'Here is my analysis...',
-        'metadata' => ['model' => 'gpt-4', 'tokens' => 532]
-    ],
-]);
-```
 
 ## Practical Examples
 
@@ -244,20 +195,7 @@ $sessions = $conversation->messages()
     ->groupBy('metadata.session_id');
 ```
 
-## Best Practices
 
-1. **Use DTOs for type safety**: When importing from external sources, DTOs provide validation and type safety
-2. **Include metadata**: Always include relevant metadata for debugging and analytics
-3. **Maintain order**: Ensure messages are added in chronological order for coherent conversations
-4. **Validate before importing**: Check message content and roles before bulk importing
-5. **Use transactions**: Wrap large imports in database transactions for data integrity
-
-```php
-DB::transaction(function () use ($conversation, $messages) {
-    $conversation->addMessages($messages);
-    $conversation->update(['imported_at' => now()]);
-});
-```
 
 ## Next Steps
 
