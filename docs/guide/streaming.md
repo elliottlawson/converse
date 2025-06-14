@@ -155,7 +155,34 @@ class StreamingChatController extends Controller
 
 ## Frontend Integration
 
-Here's how to handle streaming on the frontend with Laravel Echo:
+### Using React Hooks
+
+Handle streaming updates with the modern Laravel Echo React hooks:
+
+```jsx
+import { usePrivateChannel, useListen } from '@laravel-echo/react';
+import { useState, useEffect } from 'react';
+
+function StreamingMessage({ conversationId, messageId }) {
+    const [content, setContent] = useState('');
+    const { channel } = usePrivateChannel(`conversation.${conversationId}`);
+    
+    useListen(channel, 'StreamUpdate', (e) => {
+        if (e.messageId === messageId) {
+            setContent(prev => prev + e.chunk);
+        }
+    });
+    
+    return (
+        <div className="message">
+            {content}
+            <span className="typing-indicator">●●●</span>
+        </div>
+    );
+}
+```
+
+### Classic JavaScript Approach
 
 ```javascript
 // Listen for streaming updates

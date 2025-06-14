@@ -252,7 +252,59 @@ Set up broadcasting for real-time features:
 
 ## Frontend Integration
 
-Listen for events on the frontend using Laravel Echo:
+### Using React Hooks
+
+Listen for events using Laravel Echo React hooks:
+
+```jsx
+import { usePrivateChannel, useListen } from '@laravel-echo/react';
+import { useState } from 'react';
+
+function ConversationComponent({ userId, conversationId }) {
+    const [messages, setMessages] = useState([]);
+    const [streamingMessages, setStreamingMessages] = useState(new Map());
+    
+    // User channel for personal notifications
+    const { channel: userChannel } = usePrivateChannel(`user.${userId}`);
+    
+    // Conversation channel for real-time updates
+    const { channel: conversationChannel } = usePrivateChannel(`conversation.${conversationId}`);
+    
+    // Listen for new messages
+    useListen(userChannel, 'NewMessage', (e) => {
+        console.log('New message:', e.message);
+        setMessages(prev => [...prev, e.message]);
+    });
+    
+    // Listen for streaming updates
+    useListen(conversationChannel, 'StreamUpdate', (e) => {
+        setStreamingMessages(prev => {
+            const updated = new Map(prev);
+            const current = updated.get(e.messageId) || '';
+            updated.set(e.messageId, current + e.chunk);
+            return updated;
+        });
+    });
+    
+    // Listen for completion
+    useListen(conversationChannel, 'MessageCompleted', (e) => {
+        // Move from streaming to completed
+        const content = streamingMessages.get(e.messageId);
+        setMessages(prev => [...prev, { id: e.messageId, content, completed: true }]);
+        setStreamingMessages(prev => {
+            const updated = new Map(prev);
+            updated.delete(e.messageId);
+            return updated;
+        });
+    });
+    
+    return (
+        // Your UI components
+    );
+}
+```
+
+### Classic JavaScript Approach
 
 ```javascript
 // Listen for new messages

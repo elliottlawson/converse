@@ -11,6 +11,9 @@ First, install the necessary packages:
 ```bash
 composer require pusher/pusher-php-server
 npm install --save-dev laravel-echo pusher-js
+
+# For React hooks support (optional)
+npm install --save @laravel-echo/react
 ```
 
 ### Configure Broadcasting
@@ -28,7 +31,42 @@ PUSHER_APP_CLUSTER=mt1
 
 ### Frontend Setup
 
-Initialize Laravel Echo in your JavaScript:
+#### React Setup (Recommended)
+
+For React applications, wrap your app with the EchoProvider:
+
+```jsx
+// App.jsx
+import { EchoProvider } from '@laravel-echo/react';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
+window.Pusher = Pusher;
+
+const echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    forceTLS: true,
+    auth: {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    },
+});
+
+function App() {
+    return (
+        <EchoProvider echo={echo}>
+            {/* Your app components */}
+        </EchoProvider>
+    );
+}
+```
+
+#### Classic JavaScript Setup
+
+For non-React applications:
 
 ```javascript
 import Echo from 'laravel-echo';
@@ -169,7 +207,44 @@ Broadcast::channel('user.{userId}', function (User $user, int $userId) {
 
 ## Listening on the Frontend
 
-### Basic Message Updates
+### Using React Hooks (Recommended)
+
+Laravel Echo 2.1+ provides React hooks for a more modern development experience:
+
+```jsx
+import { usePrivateChannel, useListen } from '@laravel-echo/react';
+
+function ConversationComponent({ conversationId }) {
+    // Subscribe to private channel
+    const { channel } = usePrivateChannel(`conversation.${conversationId}`);
+    
+    // Listen for new messages
+    useListen(channel, '.message.created', (e) => {
+        console.log('New message:', e);
+        appendMessageToUI(e);
+    });
+    
+    // Listen for message updates
+    useListen(channel, '.message.updated', (e) => {
+        console.log('Message updated:', e);
+        updateMessageInUI(e);
+    });
+    
+    // Listen for message deletions
+    useListen(channel, '.message.deleted', (e) => {
+        console.log('Message deleted:', e);
+        removeMessageFromUI(e.id);
+    });
+    
+    return (
+        // Your component JSX
+    );
+}
+```
+
+### Classic JavaScript Approach
+
+If not using React hooks:
 
 ```javascript
 // Join conversation channel
@@ -196,7 +271,53 @@ conversationChannel.listen('.message.deleted', (e) => {
 
 ### Streaming Updates
 
-Handle real-time streaming:
+Handle real-time streaming with React hooks:
+
+```jsx
+import { usePrivateChannel, useListen } from '@laravel-echo/react';
+import { useState } from 'react';
+
+function StreamingConversation({ conversationId }) {
+    const [streamingMessages, setStreamingMessages] = useState(new Map());
+    const { channel } = usePrivateChannel(`conversation.${conversationId}`);
+    
+    // Listen for streaming chunks
+    useListen(channel, '.stream.chunk', (e) => {
+        setStreamingMessages(prev => {
+            const updated = new Map(prev);
+            const content = (updated.get(e.messageId) || '') + e.chunk;
+            updated.set(e.messageId, content);
+            return updated;
+        });
+    });
+    
+    // Listen for stream completion
+    useListen(channel, '.stream.completed', (e) => {
+        finalizeStreamingMessage(e.messageId);
+        setStreamingMessages(prev => {
+            const updated = new Map(prev);
+            updated.delete(e.messageId);
+            return updated;
+        });
+    });
+    
+    // Listen for stream failures
+    useListen(channel, '.stream.failed', (e) => {
+        markMessageAsFailed(e.messageId, e.error);
+        setStreamingMessages(prev => {
+            const updated = new Map(prev);
+            updated.delete(e.messageId);
+            return updated;
+        });
+    });
+    
+    return (
+        // Your streaming UI
+    );
+}
+```
+
+Classic JavaScript approach:
 
 ```javascript
 let streamingMessages = new Map();
@@ -249,7 +370,72 @@ class ConversationPresence implements ShouldBroadcast
 }
 ```
 
-Frontend presence handling:
+Frontend presence handling with React hooks:
+
+```jsx
+import { usePresenceChannel, useWhisper } from '@laravel-echo/react';
+import { useState } from 'react';
+
+function ConversationPresence({ conversationId, currentUser }) {
+    const [activeUsers, setActiveUsers] = useState([]);
+    const [typingUsers, setTypingUsers] = useState(new Set());
+    
+    const { channel } = usePresenceChannel(
+        `conversation.${conversationId}.presence`,
+        {
+            // Called with initial users
+            here: (users) => {
+                console.log('Users currently here:', users);
+                setActiveUsers(users);
+            },
+            // Called when a user joins
+            joining: (user) => {
+                console.log('User joined:', user);
+                setActiveUsers(prev => [...prev, user]);
+            },
+            // Called when a user leaves
+            leaving: (user) => {
+                console.log('User left:', user);
+                setActiveUsers(prev => prev.filter(u => u.id !== user.id));
+            },
+            // Handle errors
+            error: (error) => {
+                console.error('Presence error:', error);
+            }
+        }
+    );
+    
+    // Send typing indicators
+    const whisper = useWhisper(channel);
+    
+    const handleTyping = () => {
+        whisper('typing', {
+            user: currentUser,
+            timestamp: Date.now(),
+        });
+    };
+    
+    // Listen for typing indicators
+    useWhisper(channel, 'typing', (e) => {
+        setTypingUsers(prev => new Set(prev).add(e.user.id));
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            setTypingUsers(prev => {
+                const updated = new Set(prev);
+                updated.delete(e.user.id);
+                return updated;
+            });
+        }, 3000);
+    });
+    
+    return (
+        // Your presence UI
+    );
+}
+```
+
+Classic JavaScript approach:
 
 ```javascript
 // Join presence channel
