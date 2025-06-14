@@ -20,7 +20,7 @@ npm install --save @laravel/echo-react
 
 Update your `.env` file:
 
-```env
+```bash
 BROADCAST_DRIVER=pusher
 
 PUSHER_APP_ID=your-app-id

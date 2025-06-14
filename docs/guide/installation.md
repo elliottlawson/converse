@@ -106,7 +106,7 @@ php artisan vendor:publish --tag=converse-migrations
 
 Configure the package using environment variables:
 
-```env
+```bash
 # Attachment storage
 CONVERSE_DISK=s3
 CONVERSE_PATH=ai-conversations
