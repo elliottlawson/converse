@@ -157,21 +157,24 @@ class StreamingChatController extends Controller
 
 ### Using React Hooks
 
-Handle streaming updates with the modern Laravel Echo React hooks:
+Handle streaming updates with the Laravel Echo React hook:
 
 ```jsx
-import { usePrivateChannel, useListen } from '@laravel-echo/react';
-import { useState, useEffect } from 'react';
+import { useEcho } from '@laravel/echo-react';
+import { useState } from 'react';
 
 function StreamingMessage({ conversationId, messageId }) {
     const [content, setContent] = useState('');
-    const { channel } = usePrivateChannel(`conversation.${conversationId}`);
     
-    useListen(channel, 'StreamUpdate', (e) => {
-        if (e.messageId === messageId) {
-            setContent(prev => prev + e.chunk);
+    useEcho(
+        `private-conversation.${conversationId}`,
+        'StreamUpdate',
+        (e) => {
+            if (e.messageId === messageId) {
+                setContent(prev => prev + e.chunk);
+            }
         }
-    });
+    );
     
     return (
         <div className="message">

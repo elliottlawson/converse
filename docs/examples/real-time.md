@@ -130,78 +130,43 @@ class RealtimeChatController extends Controller
 ### React Implementation with Hooks
 
 ```jsx
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { usePrivateChannel, useListen, usePresenceChannel, useWhisper } from '@laravel-echo/react';
+import React, { useState } from 'react';
+import { useEcho } from '@laravel/echo-react';
 
-function RealtimeChat({ conversationId, currentUser }) {
+function RealtimeChat({ conversationId }) {
     const [messages, setMessages] = useState([]);
     const [streamingContent, setStreamingContent] = useState(new Map());
-    const [typingUsers, setTypingUsers] = useState(new Set());
-    const [activeUsers, setActiveUsers] = useState([]);
-    const inputRef = useRef(null);
     
-    // Subscribe to conversation channel
-    const { channel } = usePrivateChannel(`conversation.${conversationId}`);
-    
-    // Subscribe to presence channel
-    const { channel: presenceChannel } = usePresenceChannel(
-        `conversation.${conversationId}.presence`,
-        {
-            here: (users) => setActiveUsers(users),
-            joining: (user) => setActiveUsers(prev => [...prev, user]),
-            leaving: (user) => setActiveUsers(prev => prev.filter(u => u.id !== user.id)),
+    // Listen for new messages
+    useEcho(
+        `private-conversation.${conversationId}`,
+        'MessageCreated',
+        (e) => {
+            setMessages(prev => [...prev, {
+                id: e.id,
+                content: e.content,
+                role: e.role,
+                isStreaming: e.role === 'assistant' && !e.content
+            }]);
         }
     );
     
-    // Listen for new messages
-    useListen(channel, 'MessageCreated', (e) => {
-        setMessages(prev => [...prev, {
-            id: e.id,
-            content: e.content,
-            role: e.role,
-            created_at: e.created_at,
-            isStreaming: e.role === 'assistant' && !e.content
-        }]);
-    });
-    
     // Listen for streaming chunks
-    useListen(channel, 'StreamingChunk', (e) => {
-        setStreamingContent(prev => {
-            const updated = new Map(prev);
-            const current = updated.get(e.messageId) || '';
-            updated.set(e.messageId, current + e.chunk);
-            return updated;
-        });
-    });
-    
-    // Listen for typing indicators
-    const whisper = useWhisper(presenceChannel);
-    
-    useWhisper(presenceChannel, 'typing', (e) => {
-        if (e.user.id !== currentUser.id) {
-            setTypingUsers(prev => new Set(prev).add(e.user.id));
-            setTimeout(() => {
-                setTypingUsers(prev => {
-                    const updated = new Set(prev);
-                    updated.delete(e.user.id);
-                    return updated;
-                });
-            }, 3000);
+    useEcho(
+        `private-conversation.${conversationId}`,
+        'StreamingChunk',
+        (e) => {
+            setStreamingContent(prev => {
+                const updated = new Map(prev);
+                const current = updated.get(e.messageId) || '';
+                updated.set(e.messageId, current + e.chunk);
+                return updated;
+            });
         }
-    });
-    
-    // Send typing indicator
-    const handleTyping = useCallback(() => {
-        whisper('typing', { user: currentUser });
-    }, [whisper, currentUser]);
+    );
     
     // Send message
-    const sendMessage = useCallback(async () => {
-        const content = inputRef.current.value.trim();
-        if (!content) return;
-        
-        inputRef.current.value = '';
-        
+    const sendMessage = async (content) => {
         try {
             await fetch(`/api/conversations/${conversationId}/messages`, {
                 method: 'POST',
@@ -214,18 +179,10 @@ function RealtimeChat({ conversationId, currentUser }) {
         } catch (error) {
             console.error('Failed to send message:', error);
         }
-    }, [conversationId]);
+    };
     
     return (
         <div className="chat-container">
-            <div className="active-users">
-                {activeUsers.map(user => (
-                    <span key={user.id} className="user-avatar">
-                        {user.name.charAt(0)}
-                    </span>
-                ))}
-            </div>
-            
             <div className="messages">
                 {messages.map(message => (
                     <div key={message.id} className={`message ${message.role}`}>
@@ -236,26 +193,18 @@ function RealtimeChat({ conversationId, currentUser }) {
                         )}
                     </div>
                 ))}
-                
-                {typingUsers.size > 0 && (
-                    <div className="typing-indicator">
-                        {typingUsers.size} user(s) typing...
-                    </div>
-                )}
             </div>
             
-            <div className="input-area">
-                <input
-                    ref={inputRef}
-                    type="text"
-                    placeholder="Type a message..."
-                    onKeyPress={(e) => {
-                        handleTyping();
-                        if (e.key === 'Enter') sendMessage();
-                    }}
-                />
-                <button onClick={sendMessage}>Send</button>
-            </div>
+            <input
+                type="text"
+                placeholder="Type a message..."
+                onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                        sendMessage(e.target.value);
+                        e.target.value = '';
+                    }
+                }}
+            />
         </div>
     );
 }
