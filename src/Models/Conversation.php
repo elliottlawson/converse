@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Conditionable;
+use Illuminate\View\View;
 
 class Conversation extends Model
 {
@@ -80,41 +81,52 @@ class Conversation extends Model
         return $this->hasOne(Message::class)->latestOfMany();
     }
 
-    public function addMessage(MessageRole $role, ?string $content = null, array $metadata = []): self
+    protected function normalizeContent(string|View|null $content): ?string
     {
+        if ($content instanceof View) {
+            return $content->render();
+        }
+
+        return $content;
+    }
+
+    public function addMessage(MessageRole $role, string|View|null $content = null, array $metadata = []): self
+    {
+        $normalizedContent = $this->normalizeContent($content);
+
         $this->messages()->create([
             'role' => $role,
-            'content' => $content,
+            'content' => $normalizedContent,
             'metadata' => $metadata,
             'status' => MessageStatus::Success,
-            'is_complete' => filled($content),
-            'completed_at' => filled($content) ? now() : null,
+            'is_complete' => filled($normalizedContent),
+            'completed_at' => filled($normalizedContent) ? now() : null,
         ]);
 
         return $this;
     }
 
-    public function addUserMessage(string $content, array $metadata = []): self
+    public function addUserMessage(string|View $content, array $metadata = []): self
     {
         return $this->addMessage(MessageRole::User, $content, $metadata);
     }
 
-    public function addAssistantMessage(string $content, array $metadata = []): self
+    public function addAssistantMessage(string|View $content, array $metadata = []): self
     {
         return $this->addMessage(MessageRole::Assistant, $content, $metadata);
     }
 
-    public function addSystemMessage(string $content, array $metadata = []): self
+    public function addSystemMessage(string|View $content, array $metadata = []): self
     {
         return $this->addMessage(MessageRole::System, $content, $metadata);
     }
 
-    public function addToolCallMessage(string $content, array $metadata = []): self
+    public function addToolCallMessage(string|View $content, array $metadata = []): self
     {
         return $this->addMessage(MessageRole::ToolCall, $content, $metadata);
     }
 
-    public function addToolResultMessage(string $content, array $metadata = []): self
+    public function addToolResultMessage(string|View $content, array $metadata = []): self
     {
         return $this->addMessage(MessageRole::ToolResult, $content, $metadata);
     }
@@ -215,143 +227,145 @@ class Conversation extends Model
             ->get();
     }
 
-    public function createMessage(MessageRole $role, ?string $content = null, array $metadata = []): Message
+    public function createMessage(MessageRole $role, string|View|null $content = null, array $metadata = []): Message
     {
+        $normalizedContent = $this->normalizeContent($content);
+
         return $this->messages()->create([
             'role' => $role,
-            'content' => $content,
+            'content' => $normalizedContent,
             'metadata' => $metadata,
             'status' => MessageStatus::Success,
-            'is_complete' => filled($content),
-            'completed_at' => filled($content) ? now() : null,
+            'is_complete' => filled($normalizedContent),
+            'completed_at' => filled($normalizedContent) ? now() : null,
         ]);
     }
 
-    public function createUserMessage(string $content, array $metadata = []): Message
+    public function createUserMessage(string|View $content, array $metadata = []): Message
     {
         return $this->createMessage(MessageRole::User, $content, $metadata);
     }
 
-    public function createAssistantMessage(string $content, array $metadata = []): Message
+    public function createAssistantMessage(string|View $content, array $metadata = []): Message
     {
         return $this->createMessage(MessageRole::Assistant, $content, $metadata);
     }
 
-    public function createSystemMessage(string $content, array $metadata = []): Message
+    public function createSystemMessage(string|View $content, array $metadata = []): Message
     {
         return $this->createMessage(MessageRole::System, $content, $metadata);
     }
 
-    public function createToolCallMessage(string $content, array $metadata = []): Message
+    public function createToolCallMessage(string|View $content, array $metadata = []): Message
     {
         return $this->createMessage(MessageRole::ToolCall, $content, $metadata);
     }
 
-    public function createToolResultMessage(string $content, array $metadata = []): Message
+    public function createToolResultMessage(string|View $content, array $metadata = []): Message
     {
         return $this->createMessage(MessageRole::ToolResult, $content, $metadata);
     }
 
     // Conditional add helpers - fluent API (returns Conversation)
 
-    public function addUserMessageIf($condition, string $content, array $metadata = []): self
+    public function addUserMessageIf($condition, string|View $content, array $metadata = []): self
     {
         return $this->when($condition, fn () => $this->addUserMessage($content, $metadata));
     }
 
-    public function addUserMessageUnless($condition, string $content, array $metadata = []): self
+    public function addUserMessageUnless($condition, string|View $content, array $metadata = []): self
     {
         return $this->unless($condition, fn () => $this->addUserMessage($content, $metadata));
     }
 
-    public function addAssistantMessageIf($condition, string $content, array $metadata = []): self
+    public function addAssistantMessageIf($condition, string|View $content, array $metadata = []): self
     {
         return $this->when($condition, fn () => $this->addAssistantMessage($content, $metadata));
     }
 
-    public function addAssistantMessageUnless($condition, string $content, array $metadata = []): self
+    public function addAssistantMessageUnless($condition, string|View $content, array $metadata = []): self
     {
         return $this->unless($condition, fn () => $this->addAssistantMessage($content, $metadata));
     }
 
-    public function addSystemMessageIf($condition, string $content, array $metadata = []): self
+    public function addSystemMessageIf($condition, string|View $content, array $metadata = []): self
     {
         return $this->when($condition, fn () => $this->addSystemMessage($content, $metadata));
     }
 
-    public function addSystemMessageUnless($condition, string $content, array $metadata = []): self
+    public function addSystemMessageUnless($condition, string|View $content, array $metadata = []): self
     {
         return $this->unless($condition, fn () => $this->addSystemMessage($content, $metadata));
     }
 
-    public function addToolCallMessageIf($condition, string $content, array $metadata = []): self
+    public function addToolCallMessageIf($condition, string|View $content, array $metadata = []): self
     {
         return $this->when($condition, fn () => $this->addToolCallMessage($content, $metadata));
     }
 
-    public function addToolCallMessageUnless($condition, string $content, array $metadata = []): self
+    public function addToolCallMessageUnless($condition, string|View $content, array $metadata = []): self
     {
         return $this->unless($condition, fn () => $this->addToolCallMessage($content, $metadata));
     }
 
-    public function addToolResultMessageIf($condition, string $content, array $metadata = []): self
+    public function addToolResultMessageIf($condition, string|View $content, array $metadata = []): self
     {
         return $this->when($condition, fn () => $this->addToolResultMessage($content, $metadata));
     }
 
-    public function addToolResultMessageUnless($condition, string $content, array $metadata = []): self
+    public function addToolResultMessageUnless($condition, string|View $content, array $metadata = []): self
     {
         return $this->unless($condition, fn () => $this->addToolResultMessage($content, $metadata));
     }
 
     // Conditional create helpers - direct API (returns Message or null)
 
-    public function createUserMessageIf($condition, string $content, array $metadata = []): ?Message
+    public function createUserMessageIf($condition, string|View $content, array $metadata = []): ?Message
     {
         return $condition ? $this->createUserMessage($content, $metadata) : null;
     }
 
-    public function createUserMessageUnless($condition, string $content, array $metadata = []): ?Message
+    public function createUserMessageUnless($condition, string|View $content, array $metadata = []): ?Message
     {
         return ! $condition ? $this->createUserMessage($content, $metadata) : null;
     }
 
-    public function createAssistantMessageIf($condition, string $content, array $metadata = []): ?Message
+    public function createAssistantMessageIf($condition, string|View $content, array $metadata = []): ?Message
     {
         return $condition ? $this->createAssistantMessage($content, $metadata) : null;
     }
 
-    public function createAssistantMessageUnless($condition, string $content, array $metadata = []): ?Message
+    public function createAssistantMessageUnless($condition, string|View $content, array $metadata = []): ?Message
     {
         return ! $condition ? $this->createAssistantMessage($content, $metadata) : null;
     }
 
-    public function createSystemMessageIf($condition, string $content, array $metadata = []): ?Message
+    public function createSystemMessageIf($condition, string|View $content, array $metadata = []): ?Message
     {
         return $condition ? $this->createSystemMessage($content, $metadata) : null;
     }
 
-    public function createSystemMessageUnless($condition, string $content, array $metadata = []): ?Message
+    public function createSystemMessageUnless($condition, string|View $content, array $metadata = []): ?Message
     {
         return ! $condition ? $this->createSystemMessage($content, $metadata) : null;
     }
 
-    public function createToolCallMessageIf($condition, string $content, array $metadata = []): ?Message
+    public function createToolCallMessageIf($condition, string|View $content, array $metadata = []): ?Message
     {
         return $condition ? $this->createToolCallMessage($content, $metadata) : null;
     }
 
-    public function createToolCallMessageUnless($condition, string $content, array $metadata = []): ?Message
+    public function createToolCallMessageUnless($condition, string|View $content, array $metadata = []): ?Message
     {
         return ! $condition ? $this->createToolCallMessage($content, $metadata) : null;
     }
 
-    public function createToolResultMessageIf($condition, string $content, array $metadata = []): ?Message
+    public function createToolResultMessageIf($condition, string|View $content, array $metadata = []): ?Message
     {
         return $condition ? $this->createToolResultMessage($content, $metadata) : null;
     }
 
-    public function createToolResultMessageUnless($condition, string $content, array $metadata = []): ?Message
+    public function createToolResultMessageUnless($condition, string|View $content, array $metadata = []): ?Message
     {
         return ! $condition ? $this->createToolResultMessage($content, $metadata) : null;
     }
