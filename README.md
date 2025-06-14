@@ -7,6 +7,10 @@
 
 A Laravel package for storing and managing AI conversation history with any LLM provider. Built to handle the real-world needs of AI-powered applications, including streaming responses, function calling, and conversation branching.
 
+## Documentation
+
+📚 **[View the full documentation](https://converse-php.netlify.app)** - Comprehensive guides, API reference, and examples.
+
 ## Features
 
 - **Provider Agnostic**: Works with any AI provider (OpenAI, Anthropic, Google, etc.)
