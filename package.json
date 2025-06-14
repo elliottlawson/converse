@@ -1,0 +1,14 @@
+{
+  "name": "laravel-converse",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "docs:dev": "cd docs && npm run docs:dev",
+    "docs:build": "cd docs && npm install && npm run docs:build",
+    "docs:preview": "cd docs && npm run docs:preview",
+    "docs:install": "cd docs && npm install"
+  },
+  "devDependencies": {},
+  "author": "Elliott Lawson",
+  "license": "MIT"
+} 
