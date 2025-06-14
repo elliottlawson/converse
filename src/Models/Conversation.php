@@ -251,4 +251,108 @@ class Conversation extends Model
     {
         return $this->createMessage(MessageRole::ToolResult, $content, $metadata);
     }
+
+    // Conditional add helpers - fluent API (returns Conversation)
+
+    public function addUserMessageIf($condition, string $content, array $metadata = []): self
+    {
+        return $this->when($condition, fn () => $this->addUserMessage($content, $metadata));
+    }
+
+    public function addUserMessageUnless($condition, string $content, array $metadata = []): self
+    {
+        return $this->unless($condition, fn () => $this->addUserMessage($content, $metadata));
+    }
+
+    public function addAssistantMessageIf($condition, string $content, array $metadata = []): self
+    {
+        return $this->when($condition, fn () => $this->addAssistantMessage($content, $metadata));
+    }
+
+    public function addAssistantMessageUnless($condition, string $content, array $metadata = []): self
+    {
+        return $this->unless($condition, fn () => $this->addAssistantMessage($content, $metadata));
+    }
+
+    public function addSystemMessageIf($condition, string $content, array $metadata = []): self
+    {
+        return $this->when($condition, fn () => $this->addSystemMessage($content, $metadata));
+    }
+
+    public function addSystemMessageUnless($condition, string $content, array $metadata = []): self
+    {
+        return $this->unless($condition, fn () => $this->addSystemMessage($content, $metadata));
+    }
+
+    public function addToolCallMessageIf($condition, string $content, array $metadata = []): self
+    {
+        return $this->when($condition, fn () => $this->addToolCallMessage($content, $metadata));
+    }
+
+    public function addToolCallMessageUnless($condition, string $content, array $metadata = []): self
+    {
+        return $this->unless($condition, fn () => $this->addToolCallMessage($content, $metadata));
+    }
+
+    public function addToolResultMessageIf($condition, string $content, array $metadata = []): self
+    {
+        return $this->when($condition, fn () => $this->addToolResultMessage($content, $metadata));
+    }
+
+    public function addToolResultMessageUnless($condition, string $content, array $metadata = []): self
+    {
+        return $this->unless($condition, fn () => $this->addToolResultMessage($content, $metadata));
+    }
+
+    // Conditional create helpers - direct API (returns Message or null)
+
+    public function createUserMessageIf($condition, string $content, array $metadata = []): ?Message
+    {
+        return $condition ? $this->createUserMessage($content, $metadata) : null;
+    }
+
+    public function createUserMessageUnless($condition, string $content, array $metadata = []): ?Message
+    {
+        return ! $condition ? $this->createUserMessage($content, $metadata) : null;
+    }
+
+    public function createAssistantMessageIf($condition, string $content, array $metadata = []): ?Message
+    {
+        return $condition ? $this->createAssistantMessage($content, $metadata) : null;
+    }
+
+    public function createAssistantMessageUnless($condition, string $content, array $metadata = []): ?Message
+    {
+        return ! $condition ? $this->createAssistantMessage($content, $metadata) : null;
+    }
+
+    public function createSystemMessageIf($condition, string $content, array $metadata = []): ?Message
+    {
+        return $condition ? $this->createSystemMessage($content, $metadata) : null;
+    }
+
+    public function createSystemMessageUnless($condition, string $content, array $metadata = []): ?Message
+    {
+        return ! $condition ? $this->createSystemMessage($content, $metadata) : null;
+    }
+
+    public function createToolCallMessageIf($condition, string $content, array $metadata = []): ?Message
+    {
+        return $condition ? $this->createToolCallMessage($content, $metadata) : null;
+    }
+
+    public function createToolCallMessageUnless($condition, string $content, array $metadata = []): ?Message
+    {
+        return ! $condition ? $this->createToolCallMessage($content, $metadata) : null;
+    }
+
+    public function createToolResultMessageIf($condition, string $content, array $metadata = []): ?Message
+    {
+        return $condition ? $this->createToolResultMessage($content, $metadata) : null;
+    }
+
+    public function createToolResultMessageUnless($condition, string $content, array $metadata = []): ?Message
+    {
+        return ! $condition ? $this->createToolResultMessage($content, $metadata) : null;
+    }
 }
