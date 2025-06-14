@@ -197,40 +197,6 @@ class CheckForModeration implements ShouldQueue
 }
 ```
 
-## Creating Custom Events
-
-You can dispatch your own events from within the package's lifecycle:
-
-```php
-namespace App\Services;
-
-use ElliottLawson\Converse\Models\Conversation;
-use App\Events\ConversationExported;
-
-class ConversationExportService
-{
-    public function export(Conversation $conversation): string
-    {
-        $export = [
-            'conversation' => $conversation->toArray(),
-            'messages' => $conversation->messages->toArray(),
-            'metadata' => [
-                'exported_at' => now(),
-                'message_count' => $conversation->messages->count(),
-            ],
-        ];
-        
-        $filename = "conversation-{$conversation->uuid}.json";
-        Storage::put("exports/{$filename}", json_encode($export));
-        
-        // Dispatch custom event
-        event(new ConversationExported($conversation, $filename));
-        
-        return $filename;
-    }
-}
-```
-
 ## Broadcasting Configuration
 
 Set up broadcasting for real-time features:
@@ -326,82 +292,7 @@ Echo.private(`conversation.${conversationId}`)
     });
 ```
 
-## Performance Considerations
 
-### Queueing Listeners
-
-Always queue listeners that perform heavy operations:
-
-```php
-class ProcessMessageAnalytics implements ShouldQueue
-{
-    use InteractsWithQueue, Queueable;
-    
-    public $queue = 'analytics';
-    public $delay = 5; // Delay by 5 seconds
-    
-    public function handle(MessageCreated $event): void
-    {
-        // Heavy analytics processing
-    }
-}
-```
-
-### Event Batching
-
-For high-volume applications, consider batching events:
-
-```php
-class BatchedChunkProcessor
-{
-    private $chunks = [];
-    private $lastFlush;
-    
-    public function handle(ChunkReceived $event): void
-    {
-        $this->chunks[] = $event->chunk;
-        
-        // Flush every 100ms or 10 chunks
-        if (count($this->chunks) >= 10 || 
-            now()->diffInMilliseconds($this->lastFlush) > 100) {
-            $this->flush();
-        }
-    }
-    
-    private function flush(): void
-    {
-        if (empty($this->chunks)) {
-            return;
-        }
-        
-        broadcast(new BatchedStreamUpdate($this->chunks));
-        
-        $this->chunks = [];
-        $this->lastFlush = now();
-    }
-}
-```
-
-## Testing Events
-
-Test that your events are dispatched correctly:
-
-```php
-use Illuminate\Support\Facades\Event;
-use ElliottLawson\Converse\Events\MessageCreated;
-
-public function test_message_creation_dispatches_event()
-{
-    Event::fake();
-    
-    $conversation = $this->user->startConversation(['title' => 'Test']);
-    $message = $conversation->addUserMessage('Hello');
-    
-    Event::assertDispatched(MessageCreated::class, function ($event) use ($message) {
-        return $event->message->id === $message->id;
-    });
-}
-```
 
 ## Next Steps
 
