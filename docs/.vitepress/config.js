@@ -1,19 +1,19 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'Laravel Converse',
+  title: 'Converse',
   description: 'A Laravel package for storing and managing AI conversation history',
   
   head: [
-    ['link', { rel: 'icon', href: '/favicon.ico' }],
+    ['link', { rel: 'icon', href: '/converse-icon.png' }],
     ['meta', { name: 'theme-color', content: '#3eaf7c' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { property: 'og:title', content: 'Laravel Converse' }],
+    ['meta', { property: 'og:title', content: 'Converse' }],
     ['meta', { property: 'og:description', content: 'A Laravel package for storing and managing AI conversation history with any LLM provider' }],
   ],
 
   themeConfig: {
-    logo: '/logo.svg',
+    logo: '/converse-icon.png',
     
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
@@ -33,7 +33,7 @@ export default defineConfig({
         {
           text: 'Introduction',
           items: [
-            { text: 'What is Laravel Converse?', link: '/guide/what-is-converse' },
+            { text: 'What is Converse?', link: '/guide/what-is-converse' },
             { text: 'Getting Started', link: '/guide/getting-started' },
             { text: 'Installation', link: '/guide/installation' }
           ]
