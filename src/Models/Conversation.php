@@ -14,10 +14,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Traits\Conditionable;
 
 class Conversation extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use Conditionable, HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'title',
