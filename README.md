@@ -17,7 +17,7 @@
 
 **AI SDKs are great at sending messages, but terrible at having conversations.** 
 
-Converse makes AI conversations flow as naturally as Eloquent makes database queries. Instead of manually managing message arrays and context for every API call, you just write `$conversation->addUserMessage('Hello')->send()`. The entire conversation history, context management, and message formatting is handled automatically.
+Converse makes AI conversations flow as naturally as Eloquent makes database queries. Instead of manually managing message arrays and context for every API call, you just write `$conversation->addUserMessage('Hello')`. The entire conversation history, context management, and message formatting is handled automatically.
 
 ## 📚 Documentation
 
@@ -48,7 +48,7 @@ With Converse, conversations just flow:
 
 ```php
 // Context is automatic ✨
-$conversation->addUserMessage($newMessage)->send();
+$conversation->addUserMessage($newMessage);
 ```
 
 That's it. **It's the difference between sending messages and actually having a conversation.**
@@ -98,7 +98,7 @@ $conversation
     ->addAssistantMessage('Hi! How can I help you today?');
 
 // Continue the conversation anytime
-$conversation->addUserMessage('Tell me about Laravel')->send();
+$conversation->addUserMessage('Tell me about Laravel');
 ```
 
 ## Requirements
