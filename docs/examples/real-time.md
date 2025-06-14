@@ -345,6 +345,6 @@ Broadcast::channel('conversation.{conversationId}.presence', function ($user, $c
 
 ## Next Steps
 
-- Add [message reactions](/examples/reactions) functionality
-- Implement [file uploads](/examples/file-uploads) with progress tracking
-- Create [voice messages](/examples/voice) with real-time transcription 
+- Add message reactions functionality
+- Implement file uploads with progress tracking
+- Create voice messages with real-time transcription 
