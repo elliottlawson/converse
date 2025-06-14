@@ -17,14 +17,7 @@ export default defineConfig({
     
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'API', link: '/api/conversations' },
-      {
-        text: 'Links',
-        items: [
-          { text: 'GitHub', link: 'https://github.com/elliottlawson/converse' },
-          { text: 'Packagist', link: 'https://packagist.org/packages/elliottlawson/converse' }
-        ]
-      }
+      { text: 'API', link: '/api/conversations' }
     ],
 
     sidebar: {

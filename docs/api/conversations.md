@@ -4,14 +4,16 @@ Complete API documentation for the Conversation model and methods.
 
 ## Model Properties
 
-- `id` - Unique identifier
-- `conversationable_type` - Polymorphic relation type
-- `conversationable_id` - Polymorphic relation ID
-- `title` - Conversation title
-- `metadata` - JSON metadata field
-- `created_at` - Creation timestamp
-- `updated_at` - Last update timestamp
-- `deleted_at` - Soft delete timestamp
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | integer | Unique identifier |
+| `conversable_type` | string | Polymorphic relation type |
+| `conversable_id` | integer | Polymorphic relation ID |
+| `title` | string | Conversation title |
+| `metadata` | json | Additional metadata |
+| `created_at` | timestamp | Creation timestamp |
+| `updated_at` | timestamp | Last update timestamp |
+| `deleted_at` | timestamp | Soft delete timestamp |
 
 ## Methods
 
