@@ -1,10 +1,14 @@
 # Messages
 
-Messages are the core building blocks of conversations in Laravel Converse. Each message represents a single interaction in the conversation history.
+Messages are the core building blocks of conversations in Converse. Each message represents a single interaction in the conversation history.
+
+## Understanding Messages
+
+A Message is a standard Eloquent model that can be queried and manipulated just like any other Laravel model. We've enhanced it with helpful methods and scopes specifically designed for AI conversations, but at its core, it's a regular model you already know how to work with.
 
 ## Message Types
 
-Laravel Converse supports all standard AI conversation message types:
+Converse supports all standard AI conversation message types:
 
 ### User Messages
 
@@ -61,7 +65,7 @@ $conversation->addUserMessage('Deploy my app', [
 
 ## Fluent vs Direct API
 
-Laravel Converse provides two ways to work with messages:
+Converse provides two ways to work with messages:
 
 ### Fluent API (Chaining)
 

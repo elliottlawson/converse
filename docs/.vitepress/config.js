@@ -52,6 +52,8 @@ export default defineConfig({
           items: [
             { text: 'Conditional Logic', link: '/guide/conditional-logic' },
             { text: 'View Support', link: '/guide/view-support' },
+            { text: 'Bulk Operations', link: '/guide/bulk-operations' },
+            { text: 'Advanced Usage', link: '/guide/advanced' },
             { text: 'Soft Deletes', link: '/guide/soft-deletes' },
             { text: 'Broadcasting', link: '/guide/broadcasting' }
           ]

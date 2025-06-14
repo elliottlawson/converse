@@ -1,22 +1,358 @@
 # Events
 
-Documentation for events and broadcasting is coming soon.
-
-## Overview
-
-Laravel Converse fires events throughout the conversation lifecycle, enabling real-time updates and custom integrations.
+Laravel Converse dispatches events throughout the conversation lifecycle, perfect for real-time updates, analytics, and integrations.
 
 ## Available Events
 
+The package dispatches the following events:
+
+- `ConversationCreated` - When a new conversation is created
+- `MessageCreated` - When a new message is added
+- `ChunkReceived` - When a streaming chunk is received
+- `MessageCompleted` - When a streaming message completes
+- `MessageFailed` - When a streaming message fails
+
+## Setting Up Event Listeners
+
+Register your event listeners in the `EventServiceProvider`:
+
 ```php
-// Example coming soon
+use ElliottLawson\Converse\Events\ConversationCreated;
+use ElliottLawson\Converse\Events\MessageCreated;
+use ElliottLawson\Converse\Events\ChunkReceived;
+use ElliottLawson\Converse\Events\MessageCompleted;
+
+// In your EventServiceProvider
+protected $listen = [
+    ConversationCreated::class => [
+        SendWelcomeMessage::class,
+        TrackConversationAnalytics::class,
+    ],
+    MessageCreated::class => [
+        BroadcastMessageToUser::class,
+        CheckForModeration::class,
+    ],
+    ChunkReceived::class => [
+        StreamChunkToWebSocket::class,
+    ],
+    MessageCompleted::class => [
+        CalculateCosts::class,
+        UpdateUserCredits::class,
+    ],
+];
 ```
 
-## Broadcasting
+## Example Listeners
 
-Learn how to set up real-time updates with Laravel Broadcasting.
+### Broadcasting Messages
 
-## Learn More
+Broadcast new messages to users in real-time:
 
-- [Events API Reference](/api/events)
-- [Real-time Example](/examples/real-time) 
+```php
+namespace App\Listeners;
+
+use ElliottLawson\Converse\Events\MessageCreated;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Events\NewMessage;
+
+class BroadcastMessageToUser implements ShouldQueue
+{
+    public function handle(MessageCreated $event): void
+    {
+        $message = $event->message;
+        $conversation = $message->conversation;
+        
+        // Broadcast to user's private channel
+        broadcast(new NewMessage($message))
+            ->toOthers()
+            ->onChannel("user.{$conversation->conversable_id}");
+    }
+}
+```
+
+### Streaming Chunks
+
+Handle real-time streaming updates:
+
+```php
+namespace App\Listeners;
+
+use ElliottLawson\Converse\Events\ChunkReceived;
+use App\Events\StreamUpdate;
+
+class StreamChunkToWebSocket
+{
+    public function handle(ChunkReceived $event): void
+    {
+        $chunk = $event->chunk;
+        $message = $chunk->message;
+        
+        // Stream to conversation channel
+        broadcast(new StreamUpdate(
+            conversationId: $message->conversation_id,
+            messageId: $message->id,
+            chunk: $chunk->content,
+            sequence: $chunk->sequence
+        ))->toOthers();
+    }
+}
+```
+
+### Calculating Costs
+
+Track token usage and calculate costs:
+
+```php
+namespace App\Listeners;
+
+use ElliottLawson\Converse\Events\MessageCompleted;
+
+class CalculateCosts
+{
+    public function handle(MessageCompleted $event): void
+    {
+        $message = $event->message;
+        
+        if ($message->role->value === 'assistant' && isset($message->metadata['tokens'])) {
+            $cost = $this->calculateTokenCost(
+                $message->metadata['prompt_tokens'] ?? 0,
+                $message->metadata['completion_tokens'] ?? 0,
+                $message->metadata['model'] ?? 'gpt-3.5-turbo'
+            );
+            
+            // Store cost for billing
+            $message->conversation->conversable->billing()->create([
+                'tokens_used' => $message->metadata['tokens'],
+                'cost' => $cost,
+                'model' => $message->metadata['model'],
+            ]);
+        }
+    }
+    
+    private function calculateTokenCost($promptTokens, $completionTokens, $model): float
+    {
+        $rates = [
+            'gpt-3.5-turbo' => [
+                'prompt' => 0.0015 / 1000,
+                'completion' => 0.002 / 1000,
+            ],
+            'gpt-4' => [
+                'prompt' => 0.03 / 1000,
+                'completion' => 0.06 / 1000,
+            ],
+        ];
+        
+        $rate = $rates[$model] ?? $rates['gpt-3.5-turbo'];
+        
+        return ($promptTokens * $rate['prompt']) + ($completionTokens * $rate['completion']);
+    }
+}
+```
+
+### Content Moderation
+
+Check messages for inappropriate content:
+
+```php
+namespace App\Listeners;
+
+use ElliottLawson\Converse\Events\MessageCreated;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Services\ModerationService;
+
+class CheckForModeration implements ShouldQueue
+{
+    public function __construct(
+        private ModerationService $moderation
+    ) {}
+    
+    public function handle(MessageCreated $event): void
+    {
+        $message = $event->message;
+        
+        // Only check user messages
+        if ($message->role->value !== 'user') {
+            return;
+        }
+        
+        $result = $this->moderation->check($message->content);
+        
+        if ($result->flagged) {
+            $message->update([
+                'metadata' => array_merge($message->metadata ?? [], [
+                    'moderation' => [
+                        'flagged' => true,
+                        'categories' => $result->categories,
+                        'scores' => $result->scores,
+                    ]
+                ])
+            ]);
+            
+            // Optionally delete or hide the message
+            if ($result->severity === 'high') {
+                $message->delete();
+            }
+        }
+    }
+}
+```
+
+## Creating Custom Events
+
+You can dispatch your own events from within the package's lifecycle:
+
+```php
+namespace App\Services;
+
+use ElliottLawson\Converse\Models\Conversation;
+use App\Events\ConversationExported;
+
+class ConversationExportService
+{
+    public function export(Conversation $conversation): string
+    {
+        $export = [
+            'conversation' => $conversation->toArray(),
+            'messages' => $conversation->messages->toArray(),
+            'metadata' => [
+                'exported_at' => now(),
+                'message_count' => $conversation->messages->count(),
+            ],
+        ];
+        
+        $filename = "conversation-{$conversation->uuid}.json";
+        Storage::put("exports/{$filename}", json_encode($export));
+        
+        // Dispatch custom event
+        event(new ConversationExported($conversation, $filename));
+        
+        return $filename;
+    }
+}
+```
+
+## Broadcasting Configuration
+
+Set up broadcasting for real-time features:
+
+```php
+// config/broadcasting.php
+'channels' => [
+    'user.{userId}' => function ($user, $userId) {
+        return (int) $user->id === (int) $userId;
+    },
+    
+    'conversation.{conversationId}' => function ($user, $conversationId) {
+        return $user->conversations()
+            ->where('id', $conversationId)
+            ->exists();
+    },
+],
+```
+
+## Frontend Integration
+
+Listen for events on the frontend using Laravel Echo:
+
+```javascript
+// Listen for new messages
+Echo.private(`user.${userId}`)
+    .listen('NewMessage', (e) => {
+        console.log('New message:', e.message);
+        // Update UI
+    });
+
+// Listen for streaming updates
+Echo.private(`conversation.${conversationId}`)
+    .listen('StreamUpdate', (e) => {
+        // Append chunk to message
+        appendChunkToMessage(e.messageId, e.chunk);
+    })
+    .listen('MessageCompleted', (e) => {
+        // Mark message as complete
+        markMessageComplete(e.messageId);
+    });
+```
+
+## Performance Considerations
+
+### Queueing Listeners
+
+Always queue listeners that perform heavy operations:
+
+```php
+class ProcessMessageAnalytics implements ShouldQueue
+{
+    use InteractsWithQueue, Queueable;
+    
+    public $queue = 'analytics';
+    public $delay = 5; // Delay by 5 seconds
+    
+    public function handle(MessageCreated $event): void
+    {
+        // Heavy analytics processing
+    }
+}
+```
+
+### Event Batching
+
+For high-volume applications, consider batching events:
+
+```php
+class BatchedChunkProcessor
+{
+    private $chunks = [];
+    private $lastFlush;
+    
+    public function handle(ChunkReceived $event): void
+    {
+        $this->chunks[] = $event->chunk;
+        
+        // Flush every 100ms or 10 chunks
+        if (count($this->chunks) >= 10 || 
+            now()->diffInMilliseconds($this->lastFlush) > 100) {
+            $this->flush();
+        }
+    }
+    
+    private function flush(): void
+    {
+        if (empty($this->chunks)) {
+            return;
+        }
+        
+        broadcast(new BatchedStreamUpdate($this->chunks));
+        
+        $this->chunks = [];
+        $this->lastFlush = now();
+    }
+}
+```
+
+## Testing Events
+
+Test that your events are dispatched correctly:
+
+```php
+use Illuminate\Support\Facades\Event;
+use ElliottLawson\Converse\Events\MessageCreated;
+
+public function test_message_creation_dispatches_event()
+{
+    Event::fake();
+    
+    $conversation = $this->user->startConversation(['title' => 'Test']);
+    $message = $conversation->addUserMessage('Hello');
+    
+    Event::assertDispatched(MessageCreated::class, function ($event) use ($message) {
+        return $event->message->id === $message->id;
+    });
+}
+```
+
+## Next Steps
+
+- Implement [Real-time Updates](/examples/real-time) in your application
+- Learn about [Broadcasting](/guide/broadcasting) setup
+- Explore [Streaming](/guide/streaming) with events 
