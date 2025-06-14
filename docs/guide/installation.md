@@ -1,88 +1,44 @@
 # Installation
 
-This guide covers the installation and configuration of Converse in detail.
+This guide covers installing and configuring Converse in your Laravel application.
 
 ## Requirements
 
 - PHP 8.2 or higher
-- Laravel 11.0 or 12.0
+- Laravel 11.0 or higher
 - A database supported by Laravel (MySQL, PostgreSQL, SQLite, SQL Server)
 
-## Installation via Composer
+## Installation
 
-Install the package using Composer:
+Install the package via Composer:
 
 ```bash
 composer require elliottlawson/converse
 ```
 
-## Service Provider
-
-Laravel will automatically discover the `ConverseServiceProvider`. This provider:
-- Registers the configuration
-- Loads migrations
-- Sets up event listeners
-
-## Basic Setup (Zero Configuration)
-
-For most applications, you can start using Converse immediately after installation:
+Run the migrations:
 
 ```bash
-# Run migrations
 php artisan migrate
 ```
 
-That's it! The package will use sensible defaults and you can start creating conversations.
+That's it! Converse is now installed with sensible defaults.
 
-## Advanced Configuration
+## Configuration (Optional)
 
 ### Publishing the Config File
 
-If you need to customize settings, publish the configuration file:
+If you need to customize settings, you can publish the config:
 
 ```bash
 php artisan vendor:publish --tag=converse-config
 ```
 
-This creates `config/converse.php` with the following options:
+This creates `config/converse.php` where you can customize:
 
-```php
-return [
-    // Customize table names
-    'tables' => [
-        'conversations' => 'ai_conversations',
-        'messages' => 'ai_messages', 
-        'message_chunks' => 'ai_message_chunks',
-        'message_attachments' => 'ai_message_attachments',
-    ],
+### Table Names
 
-    // Override model classes
-    'models' => [
-        'conversation' => \ElliottLawson\Converse\Models\Conversation::class,
-        'message' => \ElliottLawson\Converse\Models\Message::class,
-        // ... other models
-    ],
-
-    // Attachment storage
-    'attachments' => [
-        'disk' => env('CONVERSE_DISK', 'local'),
-        'path' => env('CONVERSE_PATH', 'conversations'),
-    ],
-
-    // Auto-cleanup settings
-    'prune_after_days' => env('CONVERSE_PRUNE_DAYS', null),
-
-    // Broadcasting settings
-    'broadcasting' => [
-        'enabled' => env('CONVERSE_BROADCASTING_ENABLED', true),
-        'queue' => env('CONVERSE_BROADCAST_QUEUE', null),
-    ],
-];
-```
-
-### Customizing Table Names
-
-To use custom table names, update the config **before** running migrations:
+If you need custom table names, update the config **before** running migrations:
 
 ```php
 // config/converse.php
@@ -94,17 +50,42 @@ To use custom table names, update the config **before** running migrations:
 ],
 ```
 
-### Publishing Migrations
+### Model Classes
 
-If you need to modify the database schema, publish the migrations:
+Override the default models if needed:
 
-```bash
-php artisan vendor:publish --tag=converse-migrations
+```php
+'models' => [
+    'conversation' => \App\Models\CustomConversation::class,
+    'message' => \App\Models\CustomMessage::class,
+],
+```
+
+### Storage Settings
+
+Configure where attachments are stored:
+
+```php
+'attachments' => [
+    'disk' => env('CONVERSE_DISK', 'local'),
+    'path' => env('CONVERSE_PATH', 'conversations'),
+],
+```
+
+### Broadcasting
+
+Configure real-time broadcasting:
+
+```php
+'broadcasting' => [
+    'enabled' => env('CONVERSE_BROADCASTING_ENABLED', true),
+    'queue' => env('CONVERSE_BROADCAST_QUEUE', null),
+],
 ```
 
 ## Environment Variables
 
-Configure the package using environment variables:
+Available environment variables:
 
 ```bash
 # Attachment storage
@@ -119,49 +100,55 @@ CONVERSE_BROADCASTING_ENABLED=true
 CONVERSE_BROADCAST_QUEUE=broadcasting
 ```
 
-## Verifying Installation
+## Publishing Migrations (Advanced)
 
-After installation, verify everything is working:
+If you need to modify the database schema:
 
-```php
-use ElliottLawson\Converse\Models\Conversation;
-
-// Create a test conversation
-$conversation = Conversation::create([
-    'title' => 'Test Conversation'
-]);
-
-$conversation->addUserMessage('Hello!')
-    ->addAssistantMessage('Hi there!');
-
-// Check if messages were created
-dd($conversation->messages->toArray());
+```bash
+php artisan vendor:publish --tag=converse-migrations
 ```
+
+Then edit the migrations in `database/migrations/` before running them.
+
+## Service Provider
+
+Laravel automatically discovers the `ConverseServiceProvider`. It handles:
+- Configuration registration
+- Migration loading
+- Event listener setup
+
+No manual registration is needed.
 
 ## Troubleshooting
 
 ### Migration Errors
 
-If you encounter migration errors:
+- **Table already exists**: You may have conflicting table names. Use custom table names in the config.
+- **JSON column errors**: Ensure your database version supports JSON columns.
+- **Foreign key errors**: Check that referenced tables exist.
 
-1. Check for table name conflicts
-2. Ensure your database supports JSON columns
-3. Verify foreign key constraints
+### Configuration Issues
 
-### Configuration Not Loading
+```bash
+# Clear config cache
+php artisan config:clear
 
-1. Clear config cache: `php artisan config:clear`
-2. Check if service provider is registered
-3. Verify config file syntax
+# Clear all caches
+php artisan optimize:clear
+```
 
-### Class Not Found Errors
+### Class Not Found
 
-1. Run `composer dump-autoload`
-2. Clear Laravel caches: `php artisan cache:clear`
-3. Check namespace imports
+```bash
+# Regenerate autoload files
+composer dump-autoload
+
+# Clear compiled classes
+php artisan clear-compiled
+```
 
 ## Next Steps
 
-- Continue to [Getting Started](/guide/getting-started) for basic usage
-- Learn about [Conversations](/guide/conversations)
+- Continue to [Setup](/guide/getting-started) to create your first conversation
+- Learn about the [Conversation Model](/guide/conversations)
 - Explore [Message Types](/guide/messages) 
