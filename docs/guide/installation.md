@@ -102,35 +102,6 @@ If you need to modify the database schema, publish the migrations:
 php artisan vendor:publish --tag=converse-migrations
 ```
 
-This allows you to:
-- Add custom columns
-- Modify indexes
-- Change foreign key constraints
-- Add database-specific optimizations
-
-Example of adding a custom column:
-
-```php
-// In the published migration file
-Schema::create('ai_conversations', function (Blueprint $table) {
-    $table->id();
-    $table->uuid()->unique();
-    $table->nullableMorphs('conversationable');
-    $table->string('title')->nullable();
-    $table->json('metadata')->nullable();
-    
-    // Add your custom columns
-    $table->string('department')->nullable();
-    $table->enum('priority', ['low', 'medium', 'high'])->default('medium');
-    
-    $table->timestamps();
-    $table->softDeletes();
-    
-    $table->index(['conversationable_type', 'conversationable_id']);
-    $table->index('created_at');
-});
-```
-
 ## Environment Variables
 
 Configure the package using environment variables:
