@@ -54,8 +54,8 @@ That's it. **It's the difference between sending messages and actually having a 
 - 💾 **Database-Backed Persistence** - Conversations survive page reloads and server restarts
 - 🔌 **Provider Agnostic** - Works with OpenAI, Anthropic, Google, or any LLM
 - 🌊 **Streaming Made Simple** - Automatic message chunking and progress tracking
-- 📎 **File Attachments** - First-class support for multimodal AI
-- 🚀 **Production Ready** - Soft deletes, UUIDs, events, and comprehensive metadata
+- 🧠 **Automatic Context Management** - Stop rebuilding message arrays for every API call
+- 📡 **Built-in Events** - Track usage, build analytics, react to AI interactions
 - 🏗️ **Laravel Native** - Built with Eloquent, events, and broadcasting
 
 ## Installation
@@ -117,4 +117,4 @@ If you discover any security related issues, please email elliott.d.lawson@gmail
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE) for more information. 
+The MIT License (MIT). Please see [License File](LICENSE) for more information.

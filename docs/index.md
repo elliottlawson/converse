@@ -26,13 +26,13 @@ features:
     title: Streaming Made Simple
     details: Handle real-time AI responses elegantly. Automatic message chunking, progress tracking, and error recovery built-in.
     
-  - icon: 📎
-    title: File Attachments
-    details: First-class support for multimodal AI. Attach images, PDFs, and documents to messages. Works with vision models out of the box.
+  - icon: 🧠
+    title: Automatic Context Management
+    details: Stop manually rebuilding message arrays. Converse automatically formats conversation history for each API call and stores responses.
     
-  - icon: 🚀
-    title: Production Ready
-    details: Soft deletes, UUIDs for public URLs, comprehensive events, metadata storage. Everything you need for real applications.
+  - icon: 📡
+    title: Built-in Events
+    details: Comprehensive event system for every conversation action. Track usage, build analytics, and react to AI interactions in real-time.
     
   - icon: 🏗️
     title: Laravel Native
