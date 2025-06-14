@@ -1,6 +1,6 @@
 # Streaming Responses
 
-Most AI providers stream responses token by token. Laravel Converse makes it easy to store these streams while maintaining a great user experience.
+Most AI providers stream responses token by token. Converse makes it easy to store these streams while maintaining a great user experience.
 
 ## Starting a Streaming Response
 

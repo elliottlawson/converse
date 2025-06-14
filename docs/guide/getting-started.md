@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide will help you get up and running with Laravel Converse quickly. For detailed installation instructions, see the [Installation Guide](/guide/installation).
+This guide will help you get up and running with Converse quickly. For detailed installation instructions, see the [Installation Guide](/guide/installation).
 
 ## Quick Start
 
@@ -16,7 +16,7 @@ composer require elliottlawson/converse
 php artisan migrate
 ```
 
-That's it! You're ready to start using Laravel Converse.
+That's it! You're ready to start using Converse.
 
 ## Basic Setup
 
@@ -66,7 +66,7 @@ $conversation->addAssistantMessage(
 
 ## Fluent API
 
-Laravel Converse provides a fluent API for building conversations:
+Converse provides a fluent API for building conversations:
 
 ```php
 $conversation = $user->startConversation(['title' => 'Laravel Help'])

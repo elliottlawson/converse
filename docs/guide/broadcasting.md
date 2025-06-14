@@ -1,6 +1,6 @@
 # Broadcasting
 
-Laravel Converse integrates seamlessly with Laravel Broadcasting to provide real-time updates for conversations, messages, and streaming responses.
+Converse integrates seamlessly with Laravel Broadcasting to provide real-time updates for conversations, messages, and streaming responses.
 
 ## Setup
 

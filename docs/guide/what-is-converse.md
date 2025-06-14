@@ -1,6 +1,6 @@
-# What is Laravel Converse?
+# What is Converse?
 
-Laravel Converse is a comprehensive package for storing and managing AI conversation history in Laravel applications. It provides a robust, database-backed solution for maintaining conversation context across multiple AI interactions.
+Converse is a comprehensive package for storing and managing AI conversation history in Laravel applications. It provides a robust, database-backed solution for maintaining conversation context across multiple AI interactions.
 
 ## The Problem It Solves
 
@@ -12,7 +12,7 @@ When building AI-powered applications, developers often face these challenges:
 - **Streaming Responses**: How to handle and store real-time streaming responses
 - **Scalability**: How to efficiently manage thousands of conversations
 
-Laravel Converse addresses all these challenges with an elegant, Laravel-native solution.
+Converse addresses all these challenges with an elegant, Laravel-native solution.
 
 ## Key Benefits
 
@@ -53,7 +53,7 @@ Built with real-world applications in mind:
 
 ## How It Works
 
-Laravel Converse provides a simple, intuitive API for managing conversations:
+Converse provides a simple, intuitive API for managing conversations:
 
 ```php
 // Start a conversation
@@ -70,7 +70,7 @@ $conversation
 
 ## Use Cases
 
-Laravel Converse is perfect for:
+Converse is perfect for:
 
 - **Customer Support Chatbots**: Maintain conversation history across sessions
 - **AI Writing Assistants**: Store document revision history with AI feedback
@@ -81,7 +81,7 @@ Laravel Converse is perfect for:
 
 ## Architecture Overview
 
-Laravel Converse uses a simple but powerful architecture:
+Converse uses a simple but powerful architecture:
 
 - **Conversations**: Top-level container for a chat session
 - **Messages**: Individual messages within a conversation
@@ -94,7 +94,7 @@ All models support:
 - Polymorphic relationships
 - Event dispatching
 
-## Why Choose Laravel Converse?
+## Why Choose Converse?
 
 ### Compared to Building Your Own
 
@@ -112,4 +112,4 @@ All models support:
 
 ## Next Steps
 
-Ready to get started? Continue to the [Getting Started](/guide/getting-started) guide to install Laravel Converse and create your first AI-powered conversation! 
+Ready to get started? Continue to the [Getting Started](/guide/getting-started) guide to install Converse and create your first AI-powered conversation! 

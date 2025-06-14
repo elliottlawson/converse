@@ -1,6 +1,6 @@
 # View Support
 
-Laravel Converse seamlessly integrates with Laravel's view system, allowing you to pass Blade views directly to message methods without needing to call `->render()`. This feature makes managing complex prompts much easier by keeping them organized in dedicated Blade files rather than cluttering your PHP code with long strings.
+Converse seamlessly integrates with Laravel's view system, allowing you to pass Blade views directly to message methods without needing to call `->render()`. This feature makes managing complex prompts much easier by keeping them organized in dedicated Blade files rather than cluttering your PHP code with long strings.
 
 ## Basic Usage with Views
 

@@ -1,6 +1,6 @@
 # Soft Deletes
 
-Laravel Converse provides full support for soft deletes with automatic cascading, allowing you to safely delete conversations and messages while maintaining data integrity and the ability to restore them if needed.
+Converse provides full support for soft deletes with automatic cascading, allowing you to safely delete conversations and messages while maintaining data integrity and the ability to restore them if needed.
 
 ## Basic Usage
 

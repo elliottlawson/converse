@@ -1,6 +1,6 @@
 # Events
 
-Laravel Converse dispatches events throughout the conversation lifecycle, perfect for real-time updates, analytics, and integrations.
+Converse dispatches events throughout the conversation lifecycle, perfect for real-time updates, analytics, and integrations.
 
 ## Available Events
 

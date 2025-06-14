@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: "Laravel Converse"
+  name: "Converse"
   text: "AI Conversation Management for Laravel"
   tagline: Store and manage AI conversation history with any LLM provider. Built for real-world applications.
   actions:

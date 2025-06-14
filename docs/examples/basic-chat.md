@@ -1,6 +1,6 @@
 # Basic Chat Example
 
-This example demonstrates how to build a simple chat interface using Laravel Converse with OpenAI.
+This example demonstrates how to build a simple chat interface using Converse with OpenAI.
 
 ## Controller Setup
 

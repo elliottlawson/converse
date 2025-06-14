@@ -1,10 +1,10 @@
 # Advanced Usage
 
-This guide covers advanced features and patterns for working with Laravel Converse.
+This guide covers advanced features and patterns for working with Converse.
 
 ## Retrieving Messages
 
-Laravel Converse provides several ways to retrieve and filter messages:
+Converse provides several ways to retrieve and filter messages:
 
 ```php
 // Get all messages in a conversation

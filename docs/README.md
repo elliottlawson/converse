@@ -1,6 +1,6 @@
-# Laravel Converse Documentation
+# Converse Documentation
 
-This directory contains the VitePress documentation for Laravel Converse.
+This directory contains the VitePress documentation for Converse.
 
 ## Local Development
 

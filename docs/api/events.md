@@ -1,6 +1,6 @@
 # Events API Reference
 
-Laravel Converse dispatches various events during the conversation lifecycle.
+Converse dispatches various events during the conversation lifecycle.
 
 ## Available Events
 

@@ -1,6 +1,6 @@
 # Installation
 
-This guide covers the installation and configuration of Laravel Converse in detail.
+This guide covers the installation and configuration of Converse in detail.
 
 ## Requirements
 
@@ -25,7 +25,7 @@ Laravel will automatically discover the `ConverseServiceProvider`. This provider
 
 ## Basic Setup (Zero Configuration)
 
-For most applications, you can start using Laravel Converse immediately after installation:
+For most applications, you can start using Converse immediately after installation:
 
 ```bash
 # Run migrations

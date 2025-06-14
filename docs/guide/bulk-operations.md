@@ -1,6 +1,6 @@
 # Bulk Operations
 
-Laravel Converse provides several methods for efficiently working with multiple messages at once, whether you're importing conversation history, migrating from other systems, or building conversation context.
+Converse provides several methods for efficiently working with multiple messages at once, whether you're importing conversation history, migrating from other systems, or building conversation context.
 
 ## Helper Methods
 
