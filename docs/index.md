@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "Converse"
   text: "AI Conversation Management for Laravel"
-  tagline: Store and manage AI conversation history with any LLM provider. Built for real-world applications.
+  tagline: AI SDKs are great at sending messages, but terrible at having conversations. Converse makes AI conversations flow as naturally as Eloquent makes database queries.
   actions:
     - theme: brand
       text: Get Started
@@ -14,29 +14,29 @@ hero:
       link: https://github.com/elliottlawson/converse
 
 features:
+  - icon: 💾
+    title: Database-Backed Persistence
+    details: Conversations and messages are stored in your database, surviving page reloads and server restarts. Query your AI history with Eloquent.
+    
   - icon: 🔌
     title: Provider Agnostic
-    details: Works seamlessly with OpenAI, Anthropic, Google, and any other AI provider
-    
-  - icon: 💬
-    title: Type-Safe Messages
-    details: Dedicated methods for each message type with full TypeScript support
+    details: Works with OpenAI, Anthropic, Google, or any LLM. Switch providers without changing your code. Your data stays in your database.
     
   - icon: 🌊
-    title: Streaming Support
-    details: Elegant handling of streaming responses with automatic chunk storage
+    title: Streaming Made Simple
+    details: Handle real-time AI responses elegantly. Automatic message chunking, progress tracking, and error recovery built-in.
     
-  - icon: 📡
-    title: Real-time Updates
-    details: Built-in Laravel Broadcasting support for live conversation updates
+  - icon: 📎
+    title: File Attachments
+    details: First-class support for multimodal AI. Attach images, PDFs, and documents to messages. Works with vision models out of the box.
     
-  - icon: 🔐
-    title: Soft Deletes
-    details: Full soft delete support with automatic cascading deletes
+  - icon: 🚀
+    title: Production Ready
+    details: Soft deletes, UUIDs for public URLs, comprehensive events, metadata storage. Everything you need for real applications.
     
-  - icon: 🎯
-    title: Developer Friendly
-    details: Fluent API, conditional helpers, and Blade view integration
+  - icon: 🏗️
+    title: Laravel Native
+    details: Built with Eloquent models, Laravel events, and broadcasting. Feels like it belongs in your Laravel app because it does.
 
 ---
 
@@ -70,4 +70,34 @@ $conversation
     ->addAssistantMessage('Hi! How can I help you today?');
 ```
 
-[Learn more in the documentation →](/guide/getting-started) 
+[Learn more in the documentation →](/guide/getting-started)
+
+## The Difference
+
+Without Converse, every API call means manually rebuilding context:
+
+```php
+// Manually track every message
+$messages = [
+    ['role' => 'system', 'content' => $systemPrompt],
+    ['role' => 'user', 'content' => $oldMessage1],
+    ['role' => 'assistant', 'content' => $oldResponse1],
+    ['role' => 'user', 'content' => $oldMessage2],
+    ['role' => 'assistant', 'content' => $oldResponse2],
+    ['role' => 'user', 'content' => $newMessage],
+];
+
+// Send to API
+$response = $client->chat()->create(['messages' => $messages]);
+
+// Now figure out how to save everything...
+```
+
+With Converse, conversations just flow:
+
+```php
+// Context is automatic
+$conversation->addUserMessage($newMessage)->send();
+```
+
+That's it. The entire conversation history, context management, and message formatting is handled automatically. **It's the difference between sending messages and actually having a conversation.** 
