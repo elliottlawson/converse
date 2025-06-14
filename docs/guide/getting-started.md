@@ -22,7 +22,7 @@ That's it! You're ready to start using Laravel Converse.
 
 ### 1. Add the Trait to Your Model
 
-Add the `HasAIConversations` trait to any model that should have conversations (typically User):
+Add the `HasAIConversations` trait to any model that should have conversations:
 
 ```php
 <?php
@@ -45,11 +45,7 @@ $user = User::find(1);
 
 // Start a new conversation
 $conversation = $user->startConversation([
-    'title' => 'My First AI Chat',
-    'metadata' => [
-        'provider' => 'openai',
-        'model' => 'gpt-4',
-    ],
+    'title' => 'My First AI Chat'
 ]);
 ```
 
@@ -78,7 +74,7 @@ $conversation = $user->startConversation(['title' => 'Laravel Help'])
     ->addUserMessage('How do I create a middleware?')
     ->addAssistantMessage('To create a middleware in Laravel, you can use the artisan command...')
     ->addUserMessage('Can you show me an example?')
-    ->addAssistantMessage('Here\'s a simple example of a Laravel middleware...');
+    ->addAssistantMessage("Here's a simple example of a Laravel middleware...");
 ```
 
 ## Next Steps
