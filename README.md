@@ -103,21 +103,8 @@ $conversation->addUserMessage('Tell me about Laravel')->send();
 
 ## Requirements
 
-- PHP 8.1+
-- Laravel 10.0+
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-## Security
-
-If you discover any security related issues, please email elliott.d.lawson@gmail.com instead of using the issue tracker.
-
-## Credits
-
-- [Elliott Lawson](https://github.com/elliottlawson)
-- [All Contributors](../../contributors)
+- PHP 8.2+
+- Laravel 11+
 
 ## License
 
