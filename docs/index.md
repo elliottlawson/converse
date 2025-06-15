@@ -62,10 +62,19 @@ class User extends Model
 Start a conversation:
 
 ```php
+// Build the conversation context
 $conversation = $user->startConversation(['title' => 'My Chat'])
     ->addSystemMessage('You are a helpful assistant')
-    ->addUserMessage('Hello!')
-    ->addAssistantMessage('Hi! How can I help you today?');
+    ->addUserMessage('Hello! What is Laravel?');
+
+// Make your API call to OpenAI, Anthropic, etc.
+$response = $yourAiClient->chat([
+    'messages' => $conversation->messages->toArray(),
+    // ... other AI configuration
+]);
+
+// Store the AI's response
+$conversation->addAssistantMessage($response->content);
 ```
 
 [Learn more in the documentation →](/guide/getting-started)
@@ -96,6 +105,14 @@ With Converse, conversations just flow:
 ```php
 // Context is automatic
 $conversation->addUserMessage($newMessage);
+
+// Your AI call gets the full context
+$response = $aiClient->chat([
+    'messages' => $conversation->messages->toArray()
+]);
+
+// Store the response
+$conversation->addAssistantMessage($response->content);
 ```
 
 That's it. The entire conversation history, context management, and message formatting is handled automatically. **It's the difference between sending messages and actually having a conversation.** 
