@@ -2,8 +2,10 @@
 
 namespace ElliottLawson\Converse\Commands;
 
+use ElliottLawson\Converse\Models\Message;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class UpgradeCommand extends Command
 {
@@ -44,22 +46,26 @@ class UpgradeCommand extends Command
             // Populate UUIDs for existing messages
             $this->info('Populating UUIDs for existing messages...');
 
-            $messageModel = \ElliottLawson\Converse\Models\Message::class;
-            $messages = $messageModel::whereNull('uuid')->get();
+            $totalMessages = Message::whereNull('uuid')->count();
 
-            if ($messages->count() > 0) {
-                $bar = $this->output->createProgressBar($messages->count());
+            if ($totalMessages > 0) {
+                $bar = $this->output->createProgressBar($totalMessages);
                 $bar->start();
 
-                foreach ($messages as $message) {
-                    $message->uuid = (string) \Illuminate\Support\Str::uuid();
-                    $message->save();
-                    $bar->advance();
-                }
+                $processedCount = 0;
+
+                Message::whereNull('uuid')->chunk(100, function ($messages) use ($bar, &$processedCount) {
+                    foreach ($messages as $message) {
+                        $message->uuid = (string) Str::uuid();
+                        $message->save();
+                        $bar->advance();
+                        $processedCount++;
+                    }
+                });
 
                 $bar->finish();
                 $this->newLine();
-                $this->info("✓ Generated UUIDs for {$messages->count()} existing messages.");
+                $this->info("✓ Generated UUIDs for {$processedCount} existing messages.");
             } else {
                 $this->info('✓ No existing messages found without UUIDs.');
             }
