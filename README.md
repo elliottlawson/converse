@@ -115,7 +115,7 @@ $conversation->addAssistantMessage($response->content);
 
 ## Looking for an AI Client?
 
-Using [Prism](https://github.com/echolabs/prism-php)? Try out [Converse-Prism](https://github.com/elliottlawson/converse-prism) - a seamless integration that combines Prism's elegant AI client with Converse's conversation management.
+Using [Prism](https://github.com/prism-php/prism)? Try out [Converse-Prism](https://github.com/elliottlawson/converse-prism) - a seamless integration that combines Prism's elegant AI client with Converse's conversation management.
 
 ## Requirements
 

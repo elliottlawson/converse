@@ -81,7 +81,7 @@ $conversation->addAssistantMessage($response->content);
 
 ## Looking for an AI Client?
 
-Using [Prism](https://github.com/echolabs/prism-php) for your AI integrations? Check out [Converse-Prism](https://github.com/elliottlawson/converse-prism) for a seamless integration between both packages.
+Using [Prism](https://github.com/prism-php/prism) for your AI integrations? Check out [Converse-Prism](https://github.com/elliottlawson/converse-prism) for a seamless integration between both packages.
 
 ## The Difference
 
