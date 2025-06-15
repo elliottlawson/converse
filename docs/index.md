@@ -79,6 +79,30 @@ $conversation->addAssistantMessage($response->content);
 
 [Learn more in the documentation →](/guide/getting-started)
 
+## Works Great with Prism
+
+Converse integrates seamlessly with [Prism](https://echolabs.dev/docs/prism), providing the perfect combination for AI-powered Laravel applications:
+
+```php
+use EchoLabs\Prism\Facades\Prism;
+
+// Converse handles the conversation
+$conversation = $user->startConversation()
+    ->addSystemMessage('You are a helpful assistant')
+    ->addUserMessage('Help me write a test');
+
+// Prism handles the AI interaction
+$response = Prism::text()
+    ->using('claude-3.5-sonnet')
+    ->withMessages($conversation->messages->toArray())
+    ->generate();
+
+// Store the response
+$conversation->addAssistantMessage($response->text);
+```
+
+[Learn more about Prism integration →](/guide/prism-integration)
+
 ## The Difference
 
 Without Converse, every API call means manually rebuilding context:

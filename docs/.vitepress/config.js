@@ -45,6 +45,7 @@ export default defineConfig({
             { text: 'Conditional Logic', link: '/guide/conditional-logic' },
             { text: 'View Support', link: '/guide/view-support' },
             { text: 'Bulk Operations', link: '/guide/bulk-operations' },
+            { text: 'Prism Integration', link: '/guide/prism-integration' },
             { text: 'Advanced Usage', link: '/guide/advanced' },
             { text: 'Soft Deletes', link: '/guide/soft-deletes' }
           ]
