@@ -113,6 +113,10 @@ $response = $yourAiClient->chat([
 $conversation->addAssistantMessage($response->content);
 ```
 
+## Looking for an AI Client?
+
+Using [Prism](https://github.com/echolabs/prism-php)? Try out [Converse-Prism](https://github.com/elliottlawson/converse-prism) - a seamless integration that combines Prism's elegant AI client with Converse's conversation management.
+
 ## Requirements
 
 - PHP 8.2+
