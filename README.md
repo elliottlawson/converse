@@ -17,7 +17,7 @@
 
 **AI SDKs are great at sending messages, but terrible at having conversations.** 
 
-Converse makes AI conversations flow as naturally as Eloquent makes database queries. Instead of manually managing message arrays and context for every API call, you just write `$conversation->addUserMessage('Hello')->send()`. The entire conversation history, context management, and message formatting is handled automatically.
+Converse makes AI conversations flow as naturally as Eloquent makes database queries. Instead of manually managing message arrays and context for every API call, you just write `$conversation->addUserMessage('Hello')`. The entire conversation history, context management, and message formatting is handled automatically.
 
 ## 📚 Documentation
 
@@ -48,7 +48,15 @@ With Converse, conversations just flow:
 
 ```php
 // Context is automatic ✨
-$conversation->addUserMessage($newMessage)->send();
+$conversation->addUserMessage($newMessage);
+
+// Your AI call gets the full context
+$response = $aiClient->chat([
+    'messages' => $conversation->messages->toArray()
+]);
+
+// Store the response
+$conversation->addAssistantMessage($response->content);
 ```
 
 That's it. **It's the difference between sending messages and actually having a conversation.**
@@ -90,15 +98,19 @@ class User extends Model
 Start having conversations:
 
 ```php
-$conversation = $user->startConversation(['title' => 'My Chat']);
-
-$conversation
+// Build the conversation context
+$conversation = $user->startConversation(['title' => 'My Chat'])
     ->addSystemMessage('You are a helpful assistant')
-    ->addUserMessage('Hello!')
-    ->addAssistantMessage('Hi! How can I help you today?');
+    ->addUserMessage('Hello! What is Laravel?');
 
-// Continue the conversation anytime
-$conversation->addUserMessage('Tell me about Laravel')->send();
+// Make your API call to OpenAI, Anthropic, etc.
+$response = $yourAiClient->chat([
+    'messages' => $conversation->messages->toArray(),
+    // ... other AI configuration
+]);
+
+// Store the AI's response
+$conversation->addAssistantMessage($response->content);
 ```
 
 ## Requirements
