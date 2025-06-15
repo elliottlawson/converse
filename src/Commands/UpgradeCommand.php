@@ -10,9 +10,9 @@ use Illuminate\Support\Str;
 
 class UpgradeCommand extends Command
 {
-    protected $signature = 'converse:upgrade';
+    protected $signature = 'converse:upgrade-uuid';
 
-    protected $description = 'Upgrade Converse database schema to the latest version';
+    protected $description = 'Add UUID support to existing messages table';
 
     public function handle(): int
     {
