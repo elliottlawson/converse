@@ -54,13 +54,20 @@ class UpgradeCommand extends Command
 
                 $processedCount = 0;
 
-                Message::whereNull('uuid')->chunk(100, function ($messages) use ($bar, &$processedCount) {
+                Message::whereNull('uuid')->chunkById(100, function ($messages) use ($bar, &$processedCount) {
+                    $updates = [];
                     foreach ($messages as $message) {
-                        $message->uuid = (string) Str::uuid();
-                        $message->save();
-                        $bar->advance();
+                        $updates[] = [
+                            'id' => $message->id,
+                            'uuid' => Str::uuid()->toString(),
+                        ];
                         $processedCount++;
                     }
+
+                    // Bulk update using upsert
+                    Message::upsert($updates, ['id'], ['uuid']);
+
+                    $bar->advance(count($updates));
                 });
 
                 $bar->finish();
