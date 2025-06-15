@@ -24,6 +24,16 @@ php artisan migrate
 
 That's it! Converse is now installed with sensible defaults.
 
+### Upgrading from Earlier Versions
+
+If you installed Converse before UUID support was added to messages, run:
+
+```bash
+php artisan converse:upgrade
+```
+
+This command adds the UUID column to your existing messages table.
+
 ## Configuration (Optional)
 
 ### Publishing the Config File

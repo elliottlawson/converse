@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create(config('converse.tables.messages'), function (Blueprint $table) {
             $table->id();
+            $table->uuid()->unique();
             $table->foreignId('conversation_id')->constrained(config('converse.tables.conversations'))->cascadeOnDelete();
             $table->enum('role', ['user', 'assistant', 'system', 'tool_call', 'tool_result']);
             $table->text('content')->nullable();
