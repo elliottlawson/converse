@@ -62,9 +62,7 @@ class User extends Model
 Start a conversation:
 
 ```php
-$conversation = $user->startConversation(['title' => 'My Chat']);
-
-$conversation
+$conversation = $user->startConversation(['title' => 'My Chat'])
     ->addSystemMessage('You are a helpful assistant')
     ->addUserMessage('Hello!')
     ->addAssistantMessage('Hi! How can I help you today?');
@@ -97,7 +95,7 @@ With Converse, conversations just flow:
 
 ```php
 // Context is automatic
-$conversation->addUserMessage($newMessage)->send();
+$conversation->addUserMessage($newMessage);
 ```
 
 That's it. The entire conversation history, context management, and message formatting is handled automatically. **It's the difference between sending messages and actually having a conversation.** 

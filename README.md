@@ -90,9 +90,7 @@ class User extends Model
 Start having conversations:
 
 ```php
-$conversation = $user->startConversation(['title' => 'My Chat']);
-
-$conversation
+$conversation = $user->startConversation(['title' => 'My Chat'])
     ->addSystemMessage('You are a helpful assistant')
     ->addUserMessage('Hello!')
     ->addAssistantMessage('Hi! How can I help you today?');
