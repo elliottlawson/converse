@@ -34,17 +34,39 @@ class UpgradeCommand extends Command
         $this->info('Adding UUID column to messages table...');
 
         try {
+            // Add the UUID column
             Schema::table($messagesTable, function ($table) {
                 $table->uuid()->unique()->after('id');
             });
 
             $this->info('✓ UUID column added successfully.');
-            $this->info('');
-            $this->info('Note: Existing messages will not have UUIDs. New messages will automatically generate UUIDs.');
+
+            // Populate UUIDs for existing messages
+            $this->info('Populating UUIDs for existing messages...');
+
+            $messageModel = \ElliottLawson\Converse\Models\Message::class;
+            $messages = $messageModel::whereNull('uuid')->get();
+
+            if ($messages->count() > 0) {
+                $bar = $this->output->createProgressBar($messages->count());
+                $bar->start();
+
+                foreach ($messages as $message) {
+                    $message->uuid = (string) \Illuminate\Support\Str::uuid();
+                    $message->save();
+                    $bar->advance();
+                }
+
+                $bar->finish();
+                $this->newLine();
+                $this->info("✓ Generated UUIDs for {$messages->count()} existing messages.");
+            } else {
+                $this->info('✓ No existing messages found without UUIDs.');
+            }
 
             return self::SUCCESS;
         } catch (\Exception $e) {
-            $this->error('Failed to add UUID column: '.$e->getMessage());
+            $this->error('Failed to upgrade: '.$e->getMessage());
 
             return self::FAILURE;
         }

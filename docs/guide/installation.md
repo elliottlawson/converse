@@ -32,7 +32,9 @@ If you installed Converse before UUID support was added to messages, run:
 php artisan converse:upgrade
 ```
 
-This command adds the UUID column to your existing messages table.
+This command:
+- Adds the UUID column to your existing messages table
+- Automatically generates UUIDs for all existing messages
 
 ## Configuration (Optional)
 
