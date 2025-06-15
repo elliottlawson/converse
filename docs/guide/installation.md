@@ -29,7 +29,7 @@ That's it! Converse is now installed with sensible defaults.
 If you installed Converse before version 0.1.5, run:
 
 ```bash
-php artisan converse:upgrade
+php artisan converse:upgrade-uuid
 ```
 
 This command:
