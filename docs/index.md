@@ -79,6 +79,10 @@ $conversation->addAssistantMessage($response->content);
 
 [Learn more in the documentation →](/guide/getting-started)
 
+## Looking for an AI Client?
+
+Using [Prism](https://github.com/echolabs/prism-php) for your AI integrations? Check out [Converse-Prism](https://github.com/elliottlawson/converse-prism) for a seamless integration between both packages.
+
 ## The Difference
 
 Without Converse, every API call means manually rebuilding context:
