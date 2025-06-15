@@ -9,6 +9,7 @@ use ElliottLawson\Converse\Events\ChunkReceived;
 use ElliottLawson\Converse\Events\MessageCompleted;
 use ElliottLawson\Converse\Events\MessageCreated;
 use ElliottLawson\Converse\Events\MessageUpdated;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Message extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'role',
@@ -31,6 +32,11 @@ class Message extends Model
     public function getTable()
     {
         return config('converse.tables.messages');
+    }
+
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
     }
 
     protected $casts = [

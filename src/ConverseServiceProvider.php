@@ -2,6 +2,7 @@
 
 namespace ElliottLawson\Converse;
 
+use ElliottLawson\Converse\Commands\UpgradeCommand;
 use Illuminate\Support\ServiceProvider;
 
 class ConverseServiceProvider extends ServiceProvider
@@ -22,6 +23,10 @@ class ConverseServiceProvider extends ServiceProvider
             ], 'converse-config');
 
             $this->publishMigrations();
+
+            $this->commands([
+                UpgradeCommand::class,
+            ]);
         }
 
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');

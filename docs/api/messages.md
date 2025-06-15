@@ -7,6 +7,7 @@ The `Message` model represents individual messages within a conversation.
 | Property | Type | Description |
 |----------|------|-------------|
 | `id` | integer | Unique identifier |
+| `uuid` | uuid | Unique UUID identifier |
 | `conversation_id` | integer | Parent conversation ID |
 | `role` | MessageRole | Message role (user, assistant, system, tool_call, tool_result) |
 | `content` | text | Message content |
