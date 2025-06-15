@@ -3,6 +3,7 @@
 namespace ElliottLawson\Converse\Commands;
 
 use ElliottLawson\Converse\Models\Message;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -78,7 +79,7 @@ class UpgradeCommand extends Command
             }
 
             return self::SUCCESS;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error('Failed to upgrade: '.$e->getMessage());
 
             return self::FAILURE;
